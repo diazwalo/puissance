@@ -14,6 +14,10 @@ public class Plateau {
 		this(4);
 	}
 	
+	public Case[][] getPlateau() {
+		return this.plateau;
+	}
+	
 	private void initialisePlateau() {
 		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {

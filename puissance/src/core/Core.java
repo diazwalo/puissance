@@ -2,12 +2,15 @@ package core;
 
 import java.util.Scanner;
 
+import view.ViewGame;
+
 public class Core {
 	public static void main(String[] args) {
-		playGame();
+		//playGame();
+		ViewGame vg = new ViewGame(new Plateau());
 	}
 	
-	private static boolean playGame() {
+	public static boolean playGame() {
 		boolean win = false;
 		Plateau p = new Plateau();
 		Scanner sc = new Scanner(System.in);
@@ -38,13 +41,13 @@ public class Core {
 		return win;
 	}
 	
-	private static void clearScreen() {
+	public static void clearScreen() {
 		for (int i = 0; i < 50; i++) {
 			System.out.println();
 		}
 	}
 	
-	private static void endGameScreen(boolean win) {
+	public static void endGameScreen(boolean win) {
 		if(win) {
 			System.out.println("Congratulation Random Player !");
 		}else {
@@ -52,7 +55,7 @@ public class Core {
 		}
 	}
 
-	private static Movment saisieMovment(Scanner sc) {
+	public static Movment saisieMovment(Scanner sc) {
 		Movment mvt = null;
 		boolean saisieValide = false;
 		
