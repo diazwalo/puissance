@@ -91,7 +91,9 @@ public class Plateau {
 		return count != 0;
 	}
 	
-	public void fusion(Movment mvt) {
+	public boolean fusion(Movment mvt) {
+		int count = 0;
+		
 		if(mvt.equals(Movment.DOWN) || mvt.equals(Movment.RIGHT)) {
 			for (int idxTabX = this.plateau.length-1; idxTabX >= 0; idxTabX--) {
 				for (int idxTabY = this.plateau[idxTabX].length; idxTabY >= 0; idxTabY--) {
@@ -102,6 +104,7 @@ public class Plateau {
 						   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
 							this.plateau[posTempo[0]][posTempo[1]].getContent().incPow();
 							this.plateau[idxTabX][idxTabY].getContent().setPow(0);
+							count++;
 						}
 					}
 				}
@@ -116,11 +119,13 @@ public class Plateau {
 						   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
 							this.plateau[posTempo[0]][posTempo[1]].getContent().incPow();
 							this.plateau[idxTabX][idxTabY].getContent().setPow(0);
+							count++;
 						}
 					}
 				}
 			}
 		}
+		return count != 0;
 	}
 	
 	public boolean blocked() {

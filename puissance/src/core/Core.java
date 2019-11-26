@@ -1,7 +1,5 @@
 package core;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Scanner;
 
 public class Core {
@@ -11,33 +9,23 @@ public class Core {
 	
 	private static boolean playGame() {
 		boolean win = false;
-		
 		Plateau p = new Plateau();
 		Scanner sc = new Scanner(System.in);
 		
 		while(! p.blocked() && !win) {
-			Movment mvt = null;
-			boolean saisieValide = false;
-			
+			clearScreen();
 			System.out.print("\n" + p + "\n Move (Z, Q, S, D) : ");
-			while(! saisieValide) {
-				saisieValide = true;
-				String line = sc.nextLine();
-				if(line.toLowerCase().equals("q")) {
-					mvt = Movment.LEFT;
-				}else if(line.toLowerCase().equals("d")) {
-					mvt = Movment.RIGHT;
-				}else if(line.toLowerCase().equals("z")) {
-					mvt = Movment.UP;
-				}else if(line.toLowerCase().equals("s")) {
-					mvt = Movment.DOWN;
-				}else {
-					saisieValide = false;
-				}
-			}
 			
-			p.move(mvt);
-			p.fusion(mvt);
+			boolean mvtDone = false;
+			Movment mvt = null;
+			while(! mvtDone) {
+				
+				mvt = saisieMovment(sc);
+				
+				boolean moveDone = p.move(mvt);
+				boolean fusionDone = p.fusion(mvt);
+				mvtDone = moveDone || fusionDone;
+			}
 			p.move(mvt);
 			p.generateRandomCase();
 			win = p.win();
@@ -45,13 +33,45 @@ public class Core {
 		sc.close();
 		
 		System.out.println("\n" + p);
+		endGameScreen(win);
+		
+		return win;
+	}
+	
+	private static void clearScreen() {
+		for (int i = 0; i < 50; i++) {
+			System.out.println();
+		}
+	}
+	
+	private static void endGameScreen(boolean win) {
 		if(win) {
 			System.out.println("Congratulation Random Player !");
 		}else {
 			System.out.println("u DuMbAsS gO iT Ur ShIt !");
 		}
+	}
 
-		return win;
+	private static Movment saisieMovment(Scanner sc) {
+		Movment mvt = null;
+		boolean saisieValide = false;
+		
+		while(! saisieValide) {
+			saisieValide = true;
+			String line = sc.nextLine();
+			if(line.toLowerCase().equals("q")) {
+				mvt = Movment.LEFT;
+			}else if(line.toLowerCase().equals("d")) {
+				mvt = Movment.RIGHT;
+			}else if(line.toLowerCase().equals("z")) {
+				mvt = Movment.UP;
+			}else if(line.toLowerCase().equals("s")) {
+				mvt = Movment.DOWN;
+			}else {
+				saisieValide = false;
+			}
+		}
+		return mvt;
 	}
 	
 	private void test() {
