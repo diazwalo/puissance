@@ -2,13 +2,14 @@ package core;
 
 import java.util.Scanner;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
 import view.ViewGame;
 
-public class Core {
-	public static void main(String[] args) {
+public class Core extends Application{
+	/*public static void main(String[] args) {
 		//playGame();
-		ViewGame vg = new ViewGame(new Plateau());
-	}
+	}*/
 	
 	public static boolean playGame() {
 		boolean win = false;
@@ -100,5 +101,12 @@ public class Core {
 		
 		blocked = p.blocked();
 		System.out.println("Blocked : " + blocked + "\n");
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// TODO Auto-generated method stub
+		ViewGame vg = new ViewGame(new Plateau(4));
+		vg.createScene(primaryStage);
 	}
 }

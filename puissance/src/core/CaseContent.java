@@ -39,6 +39,10 @@ public class CaseContent {
 		this.pow ++;
 	}
 	
+	public boolean isNull() {
+		return this.pow == 0;
+	}
+	
 	public boolean equals(CaseContent c) {
 		return this.pow == c.getPow();
 	}
