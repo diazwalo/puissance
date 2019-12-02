@@ -8,7 +8,7 @@ import view.ViewGame;
 
 public class Core extends Application{
 	/*public static void main(String[] args) {
-		//playGame();
+		playGame();
 	}*/
 	
 	public static boolean playGame() {
