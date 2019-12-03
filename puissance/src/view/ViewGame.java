@@ -81,7 +81,6 @@ public class ViewGame {
 	private void addEventToStage() {
 		this.stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
 			KeyCode key = e.getCode();
-			System.out.println(key);
 			String osName = System.getProperty("os.name");
 			if(osName.contentEquals("Mac OS X")) {
 				if(key.equals(KeyCode.W) || key.equals(KeyCode.S) || key.equals(KeyCode.A) || key.equals(KeyCode.D)) {
@@ -136,6 +135,17 @@ public class ViewGame {
 			this.plateau.move(movment);
 			this.plateau.generateRandomCase();
 			this.refreshViewPlateau();
+		}
+		
+		this.verifEnd();
+	}
+	
+	public void verifEnd() {
+		if(this.plateau.win()) {
+			System.exit(0);
+		}
+		if(this.plateau.blocked()) {
+			System.exit(1);
 		}
 	}
 	

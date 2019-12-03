@@ -11,8 +11,8 @@ public class Case {
 		this(new CaseContent());
 	}
 	
-	public boolean equals(Case c) {
-		return this.content.equals(c.getContent());
+	public boolean equals(Object o) {
+		return this.content.equals(((Case)(o)).getContent());
 	}
 	
 	public CaseContent getContent() {

@@ -43,7 +43,7 @@ public class CaseContent {
 		return this.pow == 0;
 	}
 	
-	public boolean equals(CaseContent c) {
-		return this.pow == c.getPow();
+	public boolean equals(Object o) {
+		return this.pow ==  (((CaseContent) (o)).getPow());
 	}
 }

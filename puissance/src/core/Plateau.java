@@ -6,8 +6,12 @@ public class Plateau {
 	Case[][] plateau;
 	
 	public Plateau (int taille) {
-		this.plateau = new Case[taille][taille];
-		this.initialisePlateau();
+		if(taille < 4) {
+			this.plateau = new Case[4][4];
+		}else {
+			this.plateau = new Case[taille][taille];
+			this.initialisePlateau();
+		}
 	}
 
 	public Plateau () {
@@ -18,16 +22,20 @@ public class Plateau {
 		return this.plateau;
 	}
 	
-	private void initialisePlateau() {
+	protected void initialisePlateau() {
+		this.fillPlateauWithZero();
+		this.generateRandomCase();
+		this.generateRandomCase();
+	}
+	
+	protected void fillPlateauWithZero() {
 		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
 				this.plateau[idxTabX][idxTabY] = new Case(new CaseContent(0));
 			}
 		}
-		this.generateRandomCase();
-		this.generateRandomCase();
 	}
-	
+
 	public void generateRandomCase() {
 		int[] posRan = this.getRandomPosition(this.plateau.length, this.plateau.length);
 		
@@ -37,14 +45,14 @@ public class Plateau {
 		
 		Random ran = new Random();
 		int perCent = ran.nextInt(100);
-		if(perCent < 75) {
+		if(perCent < 80) {
 			this.plateau[posRan[0]][posRan[1]] = new Case(new CaseContent(1));
 		}else {
 			this.plateau[posRan[0]][posRan[1]] = new Case(new CaseContent(2));
 		}
 	}
 	
-	private int[] getRandomPosition(int rangeX, int rangeY) {
+	protected int[] getRandomPosition(int rangeX, int rangeY) {
 		int[] randomPos = new int[] {0, 0};
 		Random ran = new Random();
 		randomPos[0] = ran.nextInt(rangeX);
@@ -97,8 +105,17 @@ public class Plateau {
 	
 	public boolean fusion(Movment mvt) {
 		int count = 0;
+		/*int idxTabX;
+		int idxTabY;
+		int bounds;
+		int incr;*/
 		
 		if(mvt.equals(Movment.DOWN) || mvt.equals(Movment.RIGHT)) {
+			/*idxTabX = this.plateau.length-2;
+			idxTabY = this.plateau[idxTabX].length -2;
+			bounds  = -1;
+			incr = -1;*/
+			
 			for (int idxTabX = this.plateau.length-1; idxTabX >= 0; idxTabX--) {
 				for (int idxTabY = this.plateau[idxTabX].length; idxTabY >= 0; idxTabY--) {
 					int[] posTempo = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
@@ -114,6 +131,11 @@ public class Plateau {
 				}
 			}
 		}else {
+			/*idxTabX = - 1;
+			idxTabY = - 1;
+			bounds = this.plateau.length;
+			incr = 1;*/
+			
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
 					int[] posTempo = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
@@ -129,6 +151,22 @@ public class Plateau {
 				}
 			}
 		}
+		
+		/*for (idxTabX++; idxTabX < this.plateau.length; idxTabX += incr) {
+			for (idxTabY++; idxTabY < this.plateau[idxTabX].length; idxTabY += incr) {
+				int[] posTempo = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
+				if(posTempo[0] >= 0 && posTempo[0] < this.plateau.length && 
+				   posTempo[1] >= 0 && posTempo[1] < this.plateau[posTempo[0]].length) {
+					if(! this.plateau[idxTabX][idxTabY].equals(new Case(new CaseContent(0))) &&
+					   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
+						this.plateau[posTempo[0]][posTempo[1]].getContent().incPow();
+						this.plateau[idxTabX][idxTabY].getContent().setPow(0);
+						count++;
+					}
+				}
+			}
+		}*/
+		
 		return count != 0;
 	}
 	
