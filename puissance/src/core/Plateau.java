@@ -5,6 +5,7 @@ import java.util.Random;
 public class Plateau {
 	protected Case[][] plateau;
 	private int score;
+	private boolean win = false;
 	
 	public Plateau (int taille) {
 		if(taille < 4) {
@@ -26,6 +27,18 @@ public class Plateau {
 	
 	public int getScore() {
 		return this.score;
+	}
+	
+	public String getScoreToString() {
+		final int MAX_SIZE = 7; 
+		String scoreToString = this.score + "";
+		int bounds = MAX_SIZE - scoreToString.length();
+		
+		for (int i = 0; i < bounds; i++) {
+			scoreToString = "0" + scoreToString;
+		}
+		
+		return scoreToString;
 	}
 	
 	protected void initialisePlateau() {
@@ -202,10 +215,15 @@ public class Plateau {
 	}
 	
 	public boolean win() {
-		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
-			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-				if(this.plateau[idxTabX][idxTabY].getContent().getPow() >= 11) {
-					return true;
+		//11 pour 2048
+		final int WIN_POW = 11;
+		if(! this.win) {
+			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
+				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
+					if(this.plateau[idxTabX][idxTabY].getContent().getPow() >= WIN_POW) {
+						this.win = true;
+						return true;
+					}
 				}
 			}
 		}

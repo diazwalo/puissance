@@ -4,7 +4,6 @@ import java.awt.GraphicsEnvironment;
 
 import core.Movment;
 import core.Plateau;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -59,6 +58,8 @@ public class ViewGame {
 		this.createViewInformation();
 		this.informations.getChildren().add(labelTitleScore);
 		this.informations.getChildren().add(labelScore);
+		this.informations.getChildren().add(restart);
+		this.informations.getChildren().add(exitGame);
 		this.informations.setStyle("-fx-text-align: center;");
 		this.core.getChildren().add(informations);
 		
@@ -70,45 +71,17 @@ public class ViewGame {
 	}
 	
 	private void createViewInformation() {
-		this.core.setStyle("-fx-background-color:#900066;");
+		this.core.setStyle("-fx-background-color:#900066;"
+				+ "-fx-color : #050505;");
+		this.informations.setStyle("-fx-color : #002080;");
 		
-		double widthLabel = this.getWinWidth() - this.sizeCell*this.plateau.getPlateau().length;
-		double heigthLabel = this.getWinHeight() / 2;
+		this.informations.setMaxSize(this.getWinWidth() - this.sizeCell*this.plateau.getPlateau().length, this.getWinHeight());
 		
 		this.labelTitleScore = new Label("SCORE :");
-		this.labelScore = new Label("" + this.plateau.getScore());
+		this.labelScore = new Label("" + this.plateau.getScoreToString());
 		
-		String configueContentInfo = "-fx-font-size: 50px;";
-		String configueInfo = "-fx-font-family: \"arial\";"
-				+ "-fx-font-size: 50px;"
-				+ "-fx-border-width: 3px;"
-				+ "-fx-border-style: solid;"
-				+ "-fx-border-color: #002080;"
-				+ "-fx-border-radius:15px;"
-				+ "";
-		
-		this.informations.setMaxSize(widthLabel , heigthLabel);
-		this.informations.setStyle(configueInfo);
-		this.labelTitleScore.setStyle(configueContentInfo);
-		this.labelScore.setStyle(configueContentInfo);
-		this.labelScore.setTextFill(Color.BLACK);
-		this.labelTitleScore.setTextFill(Color.BLACK);
-		this.labelScore.setPadding(new Insets(5));
-		
-		Insets paddingTitleScore = new Insets(((this.getWinHeight()/2) - 50 * 2) / 2,
-				0, 
-				0, 
-				7.5
-				);
-		Insets paddingScore = new Insets((((this.getWinHeight()/2) - 50 * 2) - this.labelTitleScore.getPadding().getTop()),
-				0, 
-				0, 
-				7.5
-				);
-		this.labelTitleScore.setPadding(paddingTitleScore);
-		this.labelScore.setPadding(paddingScore);
-		
-		
+		this.restart = new Button("RESTART");
+		this.exitGame = new Button("EXIT GAME");
 	}
 
 	private void refreshViewPlateau() {
@@ -121,7 +94,7 @@ public class ViewGame {
 				
 				rec.setWidth(this.getWinHeight() / this.plateau.getPlateau().length);
 				rec.setHeight(this.getWinHeight() / this.plateau.getPlateau().length);
-				rec.setFill(new Color(color, color, color, 1.0));
+				rec.setFill(new Color(color + 0.1, color = 0.2, color + 0.3, 1.0));
 				rec.setStroke(Color.BLACK);
 				this.sizeCell = rec.getWidth();
 				
@@ -139,7 +112,7 @@ public class ViewGame {
 	}
 	
 	private void refreshViewInformation() {
-		this.labelScore.setText("" + this.plateau.getScore());
+		this.labelScore.setText("" + this.plateau.getScoreToString());
 	}
 
 	private void addEventToStage() {
@@ -188,8 +161,23 @@ public class ViewGame {
 				}
 			}
 		});
+		this.setOnActionInformation();
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
+	private void setOnActionInformation() {
+		// TODO Auto-generated method stub
+		this.exitGame.setOnAction(e -> {
+			System.exit(0);
+		});
+		
+		this.restart.setOnAction(e -> {
+			this.plateau = new Plateau(this.plateau.getPlateau().length);
+			this.refreshViewPlateau();
+			this.refreshViewInformation();
+		});
+	}
+
 	public void move(Movment movment) {
 		boolean moveDone = this.plateau.move(movment);
 		boolean fusionDone = this.plateau.fusion(movment);
@@ -207,7 +195,37 @@ public class ViewGame {
 	
 	public void verifEnd() {
 		if(this.plateau.win()) {
-			System.exit(0);
+			Scene winScreenScene;
+			Label labelGameWin = new Label("You have reached 2048 !");
+			this.keepPlaying = new Button("CONTINUE");
+			this.quitte = new Button("EXIT");
+			
+			VBox endScreen = new VBox();
+			HBox choice = new HBox();
+			
+			
+			endScreen.getChildren().add(labelGameWin);
+			choice.getChildren().add(this.keepPlaying);
+			choice.getChildren().add(this.quitte);
+			endScreen.getChildren().add(choice);
+			
+			winScreenScene = new Scene(endScreen);
+			
+			this.stage.hide();
+			Stage endStage = new Stage();
+			endStage.setScene(winScreenScene);
+			endStage.show();
+			
+			keepPlaying.setOnAction(e -> {
+				//this.createScene(stage);
+				endStage.hide();
+				this.stage.setScene(this.sc);
+				this.stage.show();
+			});
+			
+			quitte.setOnAction(e ->{
+				System.exit(0);
+			});
 		}
 		if(this.plateau.blocked()) {
 			System.exit(1);
