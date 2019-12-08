@@ -3,15 +3,17 @@ package core;
 import java.util.Random;
 
 public class Plateau {
-	Case[][] plateau;
+	protected Case[][] plateau;
+	private int score;
 	
 	public Plateau (int taille) {
 		if(taille < 4) {
 			this.plateau = new Case[4][4];
 		}else {
 			this.plateau = new Case[taille][taille];
-			this.initialisePlateau();
 		}
+		this.initialisePlateau();
+		this.score = 0;
 	}
 
 	public Plateau () {
@@ -20,6 +22,10 @@ public class Plateau {
 	
 	public Case[][] getPlateau() {
 		return this.plateau;
+	}
+	
+	public int getScore() {
+		return this.score;
 	}
 	
 	protected void initialisePlateau() {
@@ -125,6 +131,7 @@ public class Plateau {
 						   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
 							this.plateau[posTempo[0]][posTempo[1]].getContent().incPow();
 							this.plateau[idxTabX][idxTabY].getContent().setPow(0);
+							this.majScore(this.plateau[posTempo[0]][posTempo[1]].getContent().getPow());
 							count++;
 						}
 					}
@@ -145,6 +152,7 @@ public class Plateau {
 						   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
 							this.plateau[posTempo[0]][posTempo[1]].getContent().incPow();
 							this.plateau[idxTabX][idxTabY].getContent().setPow(0);
+							this.majScore(this.plateau[posTempo[0]][posTempo[1]].getContent().getPow());
 							count++;
 						}
 					}
@@ -168,6 +176,10 @@ public class Plateau {
 		}*/
 		
 		return count != 0;
+	}
+	
+	public void majScore(int pow) {
+		this.score += Math.pow(2, pow);
 	}
 	
 	public boolean blocked() {

@@ -4,10 +4,14 @@ import java.awt.GraphicsEnvironment;
 
 import core.Movment;
 import core.Plateau;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -22,12 +26,21 @@ public class ViewGame {
 	private Stage stage;
 	private Scene sc;
 	private Pane pane;
-	private VBox core;
+	private HBox core;
 	private GraphicsEnvironment ge;
+	private double sizeCell;
+	private VBox informations;
+	private Label labelScore;
+	private Label labelTitleScore;
+	private Button keepPlaying;
+	private Button quitte;
+	private Button restart;
+	private Button exitGame;
 	
 	public ViewGame(Plateau p) {
 		this.pane = new GridPane();
-		this.core = new VBox();
+		this.core = new HBox();
+		this.informations = new VBox();
 		this.plateau = p;
 		this.ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	}
@@ -42,8 +55,13 @@ public class ViewGame {
 	    this.stage.setMaxWidth(this.getWinWidth());
 	    
 		this.refreshViewPlateau();
-		
 		this.core.getChildren().add(pane);
+		this.createViewInformation();
+		this.informations.getChildren().add(labelTitleScore);
+		this.informations.getChildren().add(labelScore);
+		this.informations.setStyle("-fx-text-align: center;");
+		this.core.getChildren().add(informations);
+		
 		this.sc = new Scene(this.core);
 		this.addEventToStage();
 		this.stage.setScene(this.sc);
@@ -51,8 +69,49 @@ public class ViewGame {
 		this.stage.show();
 	}
 	
+	private void createViewInformation() {
+		this.core.setStyle("-fx-background-color:#900066;");
+		
+		double widthLabel = this.getWinWidth() - this.sizeCell*this.plateau.getPlateau().length;
+		double heigthLabel = this.getWinHeight() / 2;
+		
+		this.labelTitleScore = new Label("SCORE :");
+		this.labelScore = new Label("" + this.plateau.getScore());
+		
+		String configueContentInfo = "-fx-font-size: 50px;";
+		String configueInfo = "-fx-font-family: \"arial\";"
+				+ "-fx-font-size: 50px;"
+				+ "-fx-border-width: 3px;"
+				+ "-fx-border-style: solid;"
+				+ "-fx-border-color: #002080;"
+				+ "-fx-border-radius:15px;"
+				+ "";
+		
+		this.informations.setMaxSize(widthLabel , heigthLabel);
+		this.informations.setStyle(configueInfo);
+		this.labelTitleScore.setStyle(configueContentInfo);
+		this.labelScore.setStyle(configueContentInfo);
+		this.labelScore.setTextFill(Color.BLACK);
+		this.labelTitleScore.setTextFill(Color.BLACK);
+		this.labelScore.setPadding(new Insets(5));
+		
+		Insets paddingTitleScore = new Insets(((this.getWinHeight()/2) - 50 * 2) / 2,
+				0, 
+				0, 
+				7.5
+				);
+		Insets paddingScore = new Insets((((this.getWinHeight()/2) - 50 * 2) - this.labelTitleScore.getPadding().getTop()),
+				0, 
+				0, 
+				7.5
+				);
+		this.labelTitleScore.setPadding(paddingTitleScore);
+		this.labelScore.setPadding(paddingScore);
+		
+		
+	}
+
 	private void refreshViewPlateau() {
-		// TODO Auto-generated method stub
 		for (int row = 0; row < plateau.getPlateau().length; row++) {
 			for (int col = 0; col < plateau.getPlateau()[row].length; col++) {
 				StackPane stack = new StackPane();
@@ -60,10 +119,11 @@ public class ViewGame {
 				double pow = this.plateau.getPlateau()[row][col].getContent().getPow();
 				double color = (pow * 0.042) % 1;
 				
-				rec.setWidth(this.getWinWidth() / this.plateau.getPlateau().length);
+				rec.setWidth(this.getWinHeight() / this.plateau.getPlateau().length);
 				rec.setHeight(this.getWinHeight() / this.plateau.getPlateau().length);
 				rec.setFill(new Color(color, color, color, 1.0));
 				rec.setStroke(Color.BLACK);
+				this.sizeCell = rec.getWidth();
 				
 				Text text = new Text(plateau.getPlateau()[row][col].getContent().toString());
 				text.setFill(new Color(1-color, 1-color, 1-color, 1.0));
@@ -76,6 +136,10 @@ public class ViewGame {
 				this.pane.getChildren().addAll(stack);
 			}
 		}
+	}
+	
+	private void refreshViewInformation() {
+		this.labelScore.setText("" + this.plateau.getScore());
 	}
 
 	private void addEventToStage() {
@@ -135,6 +199,7 @@ public class ViewGame {
 			this.plateau.move(movment);
 			this.plateau.generateRandomCase();
 			this.refreshViewPlateau();
+			this.refreshViewInformation();
 		}
 		
 		this.verifEnd();
