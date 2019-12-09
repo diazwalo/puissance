@@ -4,6 +4,7 @@ import java.awt.GraphicsEnvironment;
 
 import core.Movment;
 import core.Plateau;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ViewGame {
@@ -31,10 +33,11 @@ public class ViewGame {
 	private VBox informations;
 	private Label labelScore;
 	private Label labelTitleScore;
-	private Button keepPlaying;
-	private Button quitte;
+	private HBox containerButton;
 	private Button restart;
 	private Button exitGame;
+	private Button keepPlaying;
+	private Button exitTheGame;
 	
 	public ViewGame(Plateau p) {
 		this.pane = new GridPane();
@@ -58,8 +61,9 @@ public class ViewGame {
 		this.createViewInformation();
 		this.informations.getChildren().add(labelTitleScore);
 		this.informations.getChildren().add(labelScore);
-		this.informations.getChildren().add(restart);
-		this.informations.getChildren().add(exitGame);
+		this.informations.getChildren().add(this.containerButton);
+		//this.informations.getChildren().add(restart);
+		//this.informations.getChildren().add(exitGame);
 		this.informations.setStyle("-fx-text-align: center;");
 		this.core.getChildren().add(informations);
 		
@@ -80,8 +84,23 @@ public class ViewGame {
 		this.labelTitleScore = new Label("SCORE :");
 		this.labelScore = new Label("" + this.plateau.getScoreToString());
 		
+		this.containerButton = new HBox();
 		this.restart = new Button("RESTART");
 		this.exitGame = new Button("EXIT GAME");
+		this.containerButton.getChildren().add(this.restart);
+		this.containerButton.getChildren().add(this.exitGame);
+		
+		this.applyStyleOnInformation();
+	}
+
+	private void applyStyleOnInformation() {
+		// TODO Auto-generated method stub
+		this.applyStyleOnLabel(this.labelTitleScore);
+		double paddLeft = this.plateau.getScoreToString().length() /2 * 12;
+		this.labelScore.setPadding(new Insets(0, 0, 0, paddLeft));
+		//this.applyStyleOnLabel(this.labelScore);
+		//this.applyStyleOnButton(this.restart);
+		//this.applyStyleOnButton(this.exitGame);
 	}
 
 	private void refreshViewPlateau() {
@@ -195,43 +214,70 @@ public class ViewGame {
 	
 	public void verifEnd() {
 		if(this.plateau.win()) {
-			Scene winScreenScene;
-			Label labelGameWin = new Label("You have reached 2048 !");
-			this.keepPlaying = new Button("CONTINUE");
-			this.quitte = new Button("EXIT");
-			
-			VBox endScreen = new VBox();
-			HBox choice = new HBox();
-			
-			
-			endScreen.getChildren().add(labelGameWin);
-			choice.getChildren().add(this.keepPlaying);
-			choice.getChildren().add(this.quitte);
-			endScreen.getChildren().add(choice);
-			
-			winScreenScene = new Scene(endScreen);
-			
-			this.stage.hide();
-			Stage endStage = new Stage();
-			endStage.setScene(winScreenScene);
-			endStage.show();
-			
-			keepPlaying.setOnAction(e -> {
-				//this.createScene(stage);
-				endStage.hide();
-				this.stage.setScene(this.sc);
-				this.stage.show();
-			});
-			
-			quitte.setOnAction(e ->{
-				System.exit(0);
-			});
+			Stage endStage = this.createEndScreen();
+			this.setOnActionEndScreen(endStage);
+			this.applyStyleVerifEnd();
 		}
 		if(this.plateau.blocked()) {
 			System.exit(1);
 		}
 	}
 	
+	private void applyStyleVerifEnd() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void setOnActionEndScreen(Stage endStage) {
+		// TODO Auto-generated method stub
+		keepPlaying.setOnAction(e -> {
+			//this.createScene(stage);
+			endStage.hide();
+			this.stage.setScene(this.sc);
+			this.stage.show();
+		});
+		
+		exitTheGame.setOnAction(e ->{
+			System.exit(0);
+		});
+	}
+
+	private Stage createEndScreen() {
+		// TODO Auto-generated method stub
+		Scene winScreenScene;
+		Label labelGameWin = new Label("You have reached 2048 !");
+		this.keepPlaying = new Button("CONTINUE");
+		this.exitTheGame = new Button("EXIT");
+		
+		VBox endScreen = new VBox();
+		HBox choice = new HBox();
+		
+		endScreen.getChildren().add(labelGameWin);
+		choice.getChildren().add(this.keepPlaying);
+		choice.getChildren().add(this.exitTheGame);
+		endScreen.getChildren().add(choice);
+		
+		winScreenScene = new Scene(endScreen);
+		
+		//this.stage.hide();
+		
+		Stage endStage = new Stage();
+		endStage.setScene(winScreenScene);
+		endStage.centerOnScreen();
+		endStage.initModality(Modality.WINDOW_MODAL);
+		endStage.initOwner(this.stage);
+		endStage.show();
+		return endStage;
+	}
+	
+	public void applyStyleOnLabel(Label l) {
+		l.setPadding(new Insets(this.getWinHeight() / 2, 0, 0, 0));
+	}
+	
+	public void applyStyleOnButton(Button b) {
+		b.setPadding(new Insets(this.getWinHeight() / 2, 0, 0, 0));
+	}
+
 	public double getWinHeight() {
 		return this.ge.getMaximumWindowBounds().getHeight();
 	}
