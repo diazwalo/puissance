@@ -75,7 +75,7 @@ public class ViewGame {
 	}
 	
 	private void createViewInformation() {
-		this.core.setStyle("-fx-background-color:#900066;"
+		this.core.setStyle("-fx-background-color : darkgreen;"
 				+ "-fx-color : #050505;");
 		this.informations.setStyle("-fx-color : #002080;");
 		
@@ -113,7 +113,7 @@ public class ViewGame {
 				
 				rec.setWidth(this.getWinHeight() / this.plateau.getPlateau().length);
 				rec.setHeight(this.getWinHeight() / this.plateau.getPlateau().length);
-				rec.setFill(new Color(color + 0.1, color = 0.2, color + 0.3, 1.0));
+				rec.setFill(new Color(color, color, color, 1.0));
 				rec.setStroke(Color.BLACK);
 				this.sizeCell = rec.getWidth();
 				
