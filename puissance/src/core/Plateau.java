@@ -216,7 +216,7 @@ public class Plateau {
 	
 	public boolean win() {
 		//11 pour 2048
-		final int WIN_POW = 4;
+		final int WIN_POW = 11;
 		if(! this.win) {
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
