@@ -2,8 +2,7 @@ package view;
 
 import java.awt.GraphicsEnvironment;
 
-import core.Movment;
-import core.Plateau;
+import game.GameClassic;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,9 +20,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Movment;
 
 public class ViewGame {
-	private Plateau plateau;
+	private GameClassic gc;
 	private Stage stage;
 	private Scene sc;
 	private Pane pane;
@@ -39,11 +39,12 @@ public class ViewGame {
 	private Button keepPlaying;
 	private Button exitTheGame;
 	
-	public ViewGame(Plateau p) {
+	public ViewGame(GameClassic gc) {
+		this.gc = gc;
 		this.pane = new GridPane();
 		this.core = new HBox();
 		this.informations = new VBox();
-		this.plateau = p;
+
 		this.ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	}
 
@@ -79,10 +80,10 @@ public class ViewGame {
 				+ "-fx-color : #050505;");
 		this.informations.setStyle("-fx-color : #002080;");
 		
-		this.informations.setMaxSize(this.getWinWidth() - this.sizeCell*this.plateau.getPlateau().length, this.getWinHeight());
+		this.informations.setMaxSize(this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length, this.getWinHeight());
 		
 		this.labelTitleScore = new Label("SCORE :");
-		this.labelScore = new Label("" + this.plateau.getScoreToString());
+		this.labelScore = new Label("" + this.gc.getPlateau().getScoreToString());
 		
 		this.containerButton = new HBox();
 		this.restart = new Button("RESTART");
@@ -96,7 +97,7 @@ public class ViewGame {
 	private void applyStyleOnInformation() {
 		// TODO Auto-generated method stub
 		this.applyStyleOnLabel(this.labelTitleScore);
-		double paddLeft = this.plateau.getScoreToString().length() /2 * 12;
+		double paddLeft = this.gc.getPlateau().getScoreToString().length() /2 * 12;
 		this.labelScore.setPadding(new Insets(0, 0, 0, paddLeft));
 		//this.applyStyleOnLabel(this.labelScore);
 		//this.applyStyleOnButton(this.restart);
@@ -104,20 +105,20 @@ public class ViewGame {
 	}
 
 	private void refreshViewPlateau() {
-		for (int row = 0; row < plateau.getPlateau().length; row++) {
-			for (int col = 0; col < plateau.getPlateau()[row].length; col++) {
+		for (int row = 0; row < gc.getPlateau().getPlateau().length; row++) {
+			for (int col = 0; col < gc.getPlateau().getPlateau()[row].length; col++) {
 				StackPane stack = new StackPane();
 				Rectangle rec = new Rectangle();
-				double pow = this.plateau.getPlateau()[row][col].getContent().getPow();
+				double pow = this.gc.getPlateau().getPlateau()[row][col].getContent().getPow();
 				double color = (pow * 0.042) % 1;
 				
-				rec.setWidth(this.getWinHeight() / this.plateau.getPlateau().length);
-				rec.setHeight(this.getWinHeight() / this.plateau.getPlateau().length);
+				rec.setWidth(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
+				rec.setHeight(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
 				rec.setFill(new Color(color, color, color, 1.0));
 				rec.setStroke(Color.BLACK);
 				this.sizeCell = rec.getWidth();
 				
-				Text text = new Text(plateau.getPlateau()[row][col].getContent().toString());
+				Text text = new Text(gc.getPlateau().getPlateau()[row][col].getContent().toString());
 				text.setFill(new Color(1-color, 1-color, 1-color, 1.0));
 				text.setFont(Font.font(0.3 * rec.getHeight()));
 				
@@ -131,7 +132,7 @@ public class ViewGame {
 	}
 	
 	private void refreshViewInformation() {
-		this.labelScore.setText("" + this.plateau.getScoreToString());
+		this.labelScore.setText("" + this.gc.getPlateau().getScoreToString());
 	}
 
 	private void addEventToStage() {
@@ -183,7 +184,6 @@ public class ViewGame {
 		this.setOnActionInformation();
 	}
 	
-	@SuppressWarnings("unlikely-arg-type")
 	private void setOnActionInformation() {
 		// TODO Auto-generated method stub
 		this.exitGame.setOnAction(e -> {
@@ -191,20 +191,20 @@ public class ViewGame {
 		});
 		
 		this.restart.setOnAction(e -> {
-			this.plateau = new Plateau(this.plateau.getPlateau().length);
+			this.gc.resetPlateau();
 			this.refreshViewPlateau();
 			this.refreshViewInformation();
 		});
 	}
 
 	public void move(Movment movment) {
-		boolean moveDone = this.plateau.move(movment);
-		boolean fusionDone = this.plateau.fusion(movment);
+		boolean moveDone = this.gc.getPlateau().move(movment);
+		boolean fusionDone = this.gc.getPlateau().fusion(movment);
 		boolean mvtDone = moveDone || fusionDone;
 		
 		if(mvtDone) {
-			this.plateau.move(movment);
-			this.plateau.generateRandomCase();
+			this.gc.getPlateau().move(movment);
+			this.gc.getPlateau().generateRandomCase();
 			this.refreshViewPlateau();
 			this.refreshViewInformation();
 		}
@@ -213,13 +213,16 @@ public class ViewGame {
 	}
 	
 	public void verifEnd() {
-		if(this.plateau.win()) {
-			Stage endStage = this.createEndScreen();
-			this.setOnActionEndScreen(endStage);
+		if(this.gc.getPlateau().win()) {
+			Stage endStage = this.createEndScreen(this.gc.getPlateau().win());
+			this.setOnActionEndScreen(endStage, true);
 			this.applyStyleVerifEnd();
 		}
-		if(this.plateau.blocked()) {
-			System.exit(1);
+		if(this.gc.getPlateau().blocked()) {
+			Stage endStage = this.createEndScreen(this.gc.getPlateau().win());
+			this.setOnActionEndScreen(endStage, false);
+			this.applyStyleVerifEnd();
+			this.applyStyleVerifEnd();
 		}
 	}
 	
@@ -228,13 +231,22 @@ public class ViewGame {
 		
 	}
 
-	private void setOnActionEndScreen(Stage endStage) {
+	private void setOnActionEndScreen(Stage endStage, boolean win) {
 		// TODO Auto-generated method stub
 		keepPlaying.setOnAction(e -> {
 			//this.createScene(stage);
-			endStage.hide();
-			this.stage.setScene(this.sc);
-			this.stage.show();
+			if(win) {
+				endStage.hide();
+				this.stage.setScene(this.sc);
+				this.stage.show();
+			}else {
+				endStage.hide();
+				this.stage.setScene(this.sc);
+				this.stage.show();
+				this.gc.resetPlateau();
+				this.refreshViewPlateau();
+				this.refreshViewInformation();
+			}
 		});
 		
 		exitTheGame.setOnAction(e ->{
@@ -242,17 +254,22 @@ public class ViewGame {
 		});
 	}
 
-	private Stage createEndScreen() {
+	private Stage createEndScreen(boolean win) {
 		// TODO Auto-generated method stub
 		Scene winScreenScene;
-		Label labelGameWin = new Label("You have reached 2048 !");
-		this.keepPlaying = new Button("CONTINUE");
+		Label labelEndGame = new Label(this.gc.endGameScreen(win));
+		if(win) {
+			this.keepPlaying = new Button("CONTINUE");
+		}else {
+			this.keepPlaying = new Button("RESTART");
+		}
+		
 		this.exitTheGame = new Button("EXIT");
 		
 		VBox endScreen = new VBox();
 		HBox choice = new HBox();
 		
-		endScreen.getChildren().add(labelGameWin);
+		endScreen.getChildren().add(labelEndGame);
 		choice.getChildren().add(this.keepPlaying);
 		choice.getChildren().add(this.exitTheGame);
 		endScreen.getChildren().add(choice);

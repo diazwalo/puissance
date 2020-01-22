@@ -1,4 +1,4 @@
-package core;
+package model;
 
 import java.util.Random;
 
@@ -47,7 +47,7 @@ public class Plateau {
 		this.generateRandomCase();
 	}
 	
-	protected void fillPlateauWithZero() {
+	public void fillPlateauWithZero() {
 		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
 				this.plateau[idxTabX][idxTabY] = new Case(new CaseContent(0));

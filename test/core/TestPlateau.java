@@ -5,6 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Case;
+import model.CaseContent;
+import model.Plateau;
+
 public class TestPlateau {
 	private Plateau plateau4par4 = new Plateau();
 	private Plateau plateau8par8 = new Plateau(8);
