@@ -109,4 +109,8 @@ public class Core extends Application{
 		ViewGame vg = new ViewGame(new Plateau(4));
 		vg.createScene(primaryStage);
 	}
+	
+	public static void main(String[] args) {
+		Application.launch(args);
+	}
 }
