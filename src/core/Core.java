@@ -24,7 +24,7 @@ public class Core extends Application{
 		p.fusion(Movment.UP);
 		System.out.println("Fusion : \n" + p);
 		
-		boolean blocked = p.blocked();
+		boolean blocked = p.isBlocked();
 		System.out.println("Blocked : " + blocked + "\n");
 		
 		int idx = 0;
@@ -35,7 +35,7 @@ public class Core extends Application{
 		}
 		System.out.println("Block : \n" + p);
 		
-		blocked = p.blocked();
+		blocked = p.isBlocked();
 		System.out.println("Blocked : " + blocked + "\n");
 	}
 

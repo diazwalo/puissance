@@ -25,6 +25,10 @@ public class Plateau {
 		return this.plateau;
 	}
 	
+	public void setPlateau(Case[][] plateau) {
+		this.plateau = plateau;
+	}
+	
 	public int getScore() {
 		return this.score;
 	}
@@ -195,7 +199,7 @@ public class Plateau {
 		this.score += Math.pow(2, pow);
 	}
 	
-	public boolean blocked() {
+	public boolean isBlocked() {
 		Movment[] mvts = Movment.values();
 		for (Movment movment : mvts) {
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
@@ -214,9 +218,9 @@ public class Plateau {
 		return true;
 	}
 	
-	public boolean win() {
+	public boolean isWin() {
 		//11 pour 2048
-		final int WIN_POW = 11;
+		final int WIN_POW = 7;
 		if(! this.win) {
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {

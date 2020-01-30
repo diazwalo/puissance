@@ -26,7 +26,7 @@ public class GameClassic {
 		boolean win = false;
 		Scanner sc = new Scanner(System.in);
 		
-		while(! p.blocked() && !win) {
+		while(! p.isBlocked() && !win) {
 			clearScreen();
 			System.out.print("\n" + p + "\n Move (Z, Q, S, D) : ");
 			
@@ -42,7 +42,7 @@ public class GameClassic {
 			}
 			p.move(mvt);
 			p.generateRandomCase();
-			win = p.win();
+			win = p.isWin();
 		}
 		sc.close();
 		

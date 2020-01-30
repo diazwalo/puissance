@@ -213,13 +213,13 @@ public class ViewGame {
 	}
 	
 	public void verifEnd() {
-		if(this.gc.getPlateau().win()) {
-			Stage endStage = this.createEndScreen(this.gc.getPlateau().win());
+		if(this.gc.getPlateau().isWin()) {
+			Stage endStage = this.createEndScreen(this.gc.getPlateau().isWin());
 			this.setOnActionEndScreen(endStage, true);
 			this.applyStyleVerifEnd();
 		}
-		if(this.gc.getPlateau().blocked()) {
-			Stage endStage = this.createEndScreen(this.gc.getPlateau().win());
+		if(this.gc.getPlateau().isBlocked()) {
+			Stage endStage = this.createEndScreen(this.gc.getPlateau().isWin());
 			this.setOnActionEndScreen(endStage, false);
 			this.applyStyleVerifEnd();
 			this.applyStyleVerifEnd();
