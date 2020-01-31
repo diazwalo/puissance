@@ -2,6 +2,7 @@ package core;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -14,18 +15,20 @@ import model.Movment;
 import model.Plateau;
 
 public class TestPlateau {
-	private Plateau plateau4par4 = new Plateau();
-	private Plateau plateau8par8 = new Plateau(8);
-	private Plateau plateau2par2 = new Plateau(2);
+	protected Plateau plateau4par4 = new Plateau();
+	protected Plateau plateau8par8 = new Plateau(8);
+	protected Plateau plateau2par2 = new Plateau(2);
+	protected TestPlateauMethode methode;
 
 	@Before
 	public void before() {
 		plateau4par4 = new Plateau();
+		methode = new TestPlateauMethode(plateau4par4);
 	}
 
 	@Test
 	public void test_taille_plateau() {
-		// plateau4par4 est initialisÃ© a 4 de longueur si on ne donne pas de taille
+		// plateau4par4 est initialisé à 4 de longueur si on ne donne pas de taille
 		assertTrue(plateau4par4.getPlateau().length == 4);
 		assertTrue(plateau4par4.getPlateau()[0].length == 4);
 		
@@ -76,84 +79,52 @@ public class TestPlateau {
 	
 	@Test
 	public void test_deplacement_cases_plateau() {
-		Case[][] casesAfterMoveUp = executeMove(Movment.UP);
+		Case[][] casesAfterMoveUp = methode.executeMove(Movment.UP);
 		assertArrayEquals(casesAfterMoveUp, plateau4par4.getPlateau());
 		
-		Case[][] casesAfterMoveDown = executeMove(Movment.DOWN);
+		Case[][] casesAfterMoveDown = methode.executeMove(Movment.DOWN);
 		assertArrayEquals(casesAfterMoveDown, plateau4par4.getPlateau());
 		
-		Case[][] casesAfterMoveLeft = executeMove(Movment.LEFT);
+		Case[][] casesAfterMoveLeft = methode.executeMove(Movment.LEFT);
 		assertArrayEquals(casesAfterMoveLeft, plateau4par4.getPlateau());
 		
-		Case[][] casesAfterMoveRight = executeMove(Movment.RIGHT);
+		Case[][] casesAfterMoveRight = methode.executeMove(Movment.RIGHT);
 		assertArrayEquals(casesAfterMoveRight, plateau4par4.getPlateau());
 	}
-
-	/**
-	 * Applique le mouvment passé en parametre sur le plateau contenant 3 cases.
-	 * Retourne le tableau contenant le resultat attendu apres l'operation "move"
-	 * @param mvt
-	 * @return Case[][] expected
-	 */
-	private Case[][] executeMove(Movment mvt) {
-		fillPlateauWith3Cases();
+	
+	@Test
+	public void test_fusion_cases_plateau() {
+		Case[][] casesAfterFusionUp = methode.executeFusion(Movment.UP);
+		assertArrayEquals(casesAfterFusionUp, plateau4par4.getPlateau());
 		
-		Case[][] casesAfterMove = new Case[4][4];
-		for (int i = 0; i < plateau4par4.getPlateau().length; i++) {
-			for (int j = 0; j < plateau4par4.getPlateau()[i].length; j++) {
-				casesAfterMove[i][j] = new Case(new CaseContent(0));
-			}
-		}
+		Case[][] casesAfterFusionDown = methode.executeFusion(Movment.DOWN);
+		assertArrayEquals(casesAfterFusionDown, plateau4par4.getPlateau());
 		
-		modifieCasesByMvt(mvt, casesAfterMove);
-		plateau4par4.move(mvt);
+		Case[][] casesAfterFusionLeft = methode.executeFusion(Movment.LEFT);
+		assertArrayEquals(casesAfterFusionLeft, plateau4par4.getPlateau());
 		
-		return casesAfterMove;
+		Case[][] casesAfterFusionRight = methode.executeFusion(Movment.RIGHT);
+		assertArrayEquals(casesAfterFusionRight, plateau4par4.getPlateau());
 	}
-
-	/**
-	 * Place dans le tableau 3 cases à la puissance 1.
-	 * On obtient un resultat de cette forme :
-	 * 
-	 *  [  ,  ,  ,  ]
-	 *  [  , 2, 2,  ]
-	 *  [  , 2,  ,  ]
-	 *  [  ,  ,  ,  ]
-	 * 
-	 */
-	private void fillPlateauWith3Cases() {
-		plateau4par4.fillPlateauWithZero();
+	
+	@Test
+	public void test_plateau_bloque() {
+		methode.fillPlateauWith3Cases();
+		assertFalse(plateau4par4.isBlocked());
 		
-		plateau4par4.getPlateau()[1][1] = new Case(new CaseContent(1));
-		plateau4par4.getPlateau()[2][1] = new Case(new CaseContent(1));
-		plateau4par4.getPlateau()[1][2] = new Case(new CaseContent(1));
+		methode.setPlateauAlmostBlocked();
+		assertFalse(plateau4par4.isBlocked());
+		
+		methode.setPlateauBlocked();
+		assertTrue(plateau4par4.isBlocked());
 	}
-
-	/**
-	 * Modifie le tablea de case passé en parametre pour qu'il contienne le
-	 * resultat attendu apres le mouvment mvt lui aussi en parametre
-	 * 
-	 * @param mvt
-	 * @param casesAfterMove
-	 */
-	private void modifieCasesByMvt(Movment mvt, Case[][] casesAfterMove) {
-		// TODO Auto-generated method stub
-		if(mvt.equals(Movment.UP)) {
-			casesAfterMove[1][1] = new Case(new CaseContent(1));
-			casesAfterMove[2][0] = new Case(new CaseContent(1));
-			casesAfterMove[1][0] = new Case(new CaseContent(1));
-		}else if(mvt.equals(Movment.DOWN)) {
-			casesAfterMove[1][2] = new Case(new CaseContent(1));
-			casesAfterMove[1][3] = new Case(new CaseContent(1));
-			casesAfterMove[2][3] = new Case(new CaseContent(1));
-		}else if(mvt.equals(Movment.LEFT)) {
-			casesAfterMove[0][1] = new Case(new CaseContent(1));
-			casesAfterMove[1][1] = new Case(new CaseContent(1));
-			casesAfterMove[0][2] = new Case(new CaseContent(1));
-		}else if(mvt.equals(Movment.RIGHT)) {
-			casesAfterMove[2][1] = new Case(new CaseContent(1));
-			casesAfterMove[3][1] = new Case(new CaseContent(1));
-			casesAfterMove[3][2] = new Case(new CaseContent(1));
-		}
+	
+	@Test
+	public void test_gagner_partie() {
+		methode.fillPlateauWith3Cases();
+		assertFalse(plateau4par4.isWin());
+		
+		methode.setTheGameWin();
+		assertTrue(plateau4par4.isWin());
 	}
 }

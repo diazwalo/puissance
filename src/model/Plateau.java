@@ -6,6 +6,7 @@ public class Plateau {
 	protected Case[][] plateau;
 	private int score;
 	private boolean win = false;
+	private final int MINIMAL_POW_TO_WIN;
 	
 	public Plateau (int taille) {
 		if(taille < 4) {
@@ -15,6 +16,8 @@ public class Plateau {
 		}
 		this.initialisePlateau();
 		this.score = 0;
+		this.MINIMAL_POW_TO_WIN = 11;
+		//Car 2^11 6 -> 2048
 	}
 
 	public Plateau () {
@@ -31,6 +34,14 @@ public class Plateau {
 	
 	public int getScore() {
 		return this.score;
+	}
+	
+	public void majScore(int pow) {
+		this.score += Math.pow(2, pow);
+	}
+
+	public int getMinimalPowToWin() {
+		return this.MINIMAL_POW_TO_WIN;
 	}
 	
 	public String getScoreToString() {
@@ -195,10 +206,6 @@ public class Plateau {
 		return count != 0;
 	}
 	
-	public void majScore(int pow) {
-		this.score += Math.pow(2, pow);
-	}
-	
 	public boolean isBlocked() {
 		Movment[] mvts = Movment.values();
 		for (Movment movment : mvts) {
@@ -219,12 +226,10 @@ public class Plateau {
 	}
 	
 	public boolean isWin() {
-		//11 pour 2048
-		final int WIN_POW = 7;
 		if(! this.win) {
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-					if(this.plateau[idxTabX][idxTabY].getContent().getPow() >= WIN_POW) {
+					if(this.plateau[idxTabX][idxTabY].getContent().getPow() >= MINIMAL_POW_TO_WIN) {
 						this.win = true;
 						return true;
 					}
