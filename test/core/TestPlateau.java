@@ -89,12 +89,14 @@ public class TestPlateau {
 		assertArrayEquals(casesAfterMoveRight, plateau4par4.getPlateau());
 	}
 
+	/**
+	 * Applique le mouvment passé en parametre sur le plateau contenant 3 cases.
+	 * Retourne le tableau contenant le resultat attendu apres l'operation "move"
+	 * @param mvt
+	 * @return Case[][] expected
+	 */
 	private Case[][] executeMove(Movment mvt) {
-		plateau4par4.fillPlateauWithZero();
-		
-		plateau4par4.getPlateau()[1][1] = new Case(new CaseContent(1));
-		plateau4par4.getPlateau()[2][1] = new Case(new CaseContent(1));
-		plateau4par4.getPlateau()[1][2] = new Case(new CaseContent(1));
+		fillPlateauWith3Cases();
 		
 		Case[][] casesAfterMove = new Case[4][4];
 		for (int i = 0; i < plateau4par4.getPlateau().length; i++) {
@@ -104,11 +106,36 @@ public class TestPlateau {
 		}
 		
 		modifieCasesByMvt(mvt, casesAfterMove);
-		
 		plateau4par4.move(mvt);
+		
 		return casesAfterMove;
 	}
 
+	/**
+	 * Place dans le tableau 3 cases à la puissance 1.
+	 * On obtient un resultat de cette forme :
+	 * 
+	 *  [  ,  ,  ,  ]
+	 *  [  , 2, 2,  ]
+	 *  [  , 2,  ,  ]
+	 *  [  ,  ,  ,  ]
+	 * 
+	 */
+	private void fillPlateauWith3Cases() {
+		plateau4par4.fillPlateauWithZero();
+		
+		plateau4par4.getPlateau()[1][1] = new Case(new CaseContent(1));
+		plateau4par4.getPlateau()[2][1] = new Case(new CaseContent(1));
+		plateau4par4.getPlateau()[1][2] = new Case(new CaseContent(1));
+	}
+
+	/**
+	 * Modifie le tablea de case passé en parametre pour qu'il contienne le
+	 * resultat attendu apres le mouvment mvt lui aussi en parametre
+	 * 
+	 * @param mvt
+	 * @param casesAfterMove
+	 */
 	private void modifieCasesByMvt(Movment mvt, Case[][] casesAfterMove) {
 		// TODO Auto-generated method stub
 		if(mvt.equals(Movment.UP)) {
@@ -127,8 +154,6 @@ public class TestPlateau {
 			casesAfterMove[2][1] = new Case(new CaseContent(1));
 			casesAfterMove[3][1] = new Case(new CaseContent(1));
 			casesAfterMove[3][2] = new Case(new CaseContent(1));
-		}else {
-			
 		}
 	}
 }

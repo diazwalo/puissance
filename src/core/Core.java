@@ -10,10 +10,6 @@ import model.Plateau;
 import view.ViewGame;
 
 public class Core extends Application{
-	/*public static void main(String[] args) {
-		playGame();
-	}*/
-	
 	private void test() {
 		Plateau p = new Plateau();
 		System.out.println("Init : \n" + p);
