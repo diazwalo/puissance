@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -62,8 +63,10 @@ public class ViewGame {
 		this.refreshViewPlateau();
 		this.core.getChildren().add(pane);
 		this.createViewInformation();
+		
 		this.informations.getChildren().add(labelTitleScore);
 		this.informations.getChildren().add(labelScore);
+		this.informations.getChildren().add(new Label());
 		this.informations.getChildren().add(this.containerButton);
 		
 		this.informations.setStyle("-fx-text-align: center;");
@@ -78,7 +81,7 @@ public class ViewGame {
 	
 	private void createViewInformation() {
 		this.core.setStyle("-fx-background-color : #F0C300;"
-				+ "-fx-color : #050505;");
+				+ "-fx-color : #F0C300;");
 		
 		this.informations.setMaxSize(this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length, this.getWinHeight());
 		
@@ -106,26 +109,31 @@ public class ViewGame {
 				+ "-fx-padding: 10px;"
 				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/6 + ";");
 		
-		this.labelScore.setTextFill(Color.WHITE);
-		this.labelTitleScore.setTextFill(Color.WHITE);
+		this.labelScore.setTextFill(Color.RED);
+		this.labelTitleScore.setTextFill(Color.RED);
 
 		this.labelScore.setPadding(new Insets(40));
 		
 		this.containerButton = new HBox();
 		this.restart = new Button("RESTART");
-		this.restart.setStyle("-fx-background-color : Black;"
-				+ "-fx-border: solid;"
+		this.restart.setStyle("-fx-border: solid;"
+				+ "-fx-background-color : #F0C300;"
 				+ "-fx-border-width: 3px;"
-				+ "-fx-border-color: white;"
+				+ "-fx-border-color: black;"
 				+ "-fx-border-radius:15px;"
 				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
 		this.exitGame = new Button("EXIT GAME");
-		this.exitGame.setStyle("-fx-background-color : Black;"
-				+ "-fx-border: solid;"
+		this.exitGame.setStyle("-fx-border: solid;"
+				+ "-fx-background-color : #F0C300;"
 				+ "-fx-border-width: 3px;"
-				+ "-fx-border-color: white;"
+				+ "-fx-border-color: black;"
 				+ "-fx-border-radius:15px;"
 				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
+		this.exitGame.setTextFill(Color.RED);
+		this.restart.setTextFill(Color.RED);
+		
+		
+		
 		this.containerButton.getChildren().add(this.restart);
 		this.containerButton.getChildren().add(this.exitGame);
 		
@@ -156,11 +164,11 @@ public class ViewGame {
 				rec.setWidth(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
 				rec.setHeight(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
 				rec.setFill(new Color(color, color, color, 1.0));
-				rec.setStroke(Color.BLACK);
+				rec.setStroke(new Color((240.0/255), (195.0/255), 0.0, 1.0));
 				this.sizeCell = rec.getWidth();
 				
 				Text text = new Text(gc.getPlateau().getPlateau()[row][col].getContent().toString());
-				text.setFill(new Color(1-color, 1-color, 1-color, 1.0));
+				text.setFill(Color.DARKRED/*new Color(1-color, 1-color, 1-color, 1.0)*/);
 				text.setFont(Font.font(0.3 * rec.getHeight()));
 				
 				stack.getChildren().addAll(rec, text);
