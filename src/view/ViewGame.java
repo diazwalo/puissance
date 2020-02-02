@@ -4,9 +4,11 @@ import java.awt.GraphicsEnvironment;
 
 import game.GameClassic;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -51,7 +53,7 @@ public class ViewGame {
 	public void createScene(Stage stage) {
 		this.stage = stage;
 		this.stage.setTitle("La Puissance");
-	    //stage.getIcons().add(new Image(chemin));
+	    this.stage.getIcons().add(new Image("laPuissance.jpg"));
 	    this.stage.setMaximized(true);
 	    this.stage.setResizable(false);
 	    this.stage.setMaxHeight(this.getWinHeight());
@@ -63,8 +65,7 @@ public class ViewGame {
 		this.informations.getChildren().add(labelTitleScore);
 		this.informations.getChildren().add(labelScore);
 		this.informations.getChildren().add(this.containerButton);
-		//this.informations.getChildren().add(restart);
-		//this.informations.getChildren().add(exitGame);
+		
 		this.informations.setStyle("-fx-text-align: center;");
 		this.core.getChildren().add(informations);
 		
@@ -76,29 +77,69 @@ public class ViewGame {
 	}
 	
 	private void createViewInformation() {
-		this.core.setStyle("-fx-background-color : darkgreen;"
+		this.core.setStyle("-fx-background-color : #F0C300;"
 				+ "-fx-color : #050505;");
-		this.informations.setStyle("-fx-color : #002080;");
 		
 		this.informations.setMaxSize(this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length, this.getWinHeight());
 		
 		this.labelTitleScore = new Label("SCORE :");
+		this.labelTitleScore.setStyle("-fx-font-family: \"arial\";"
+				+ "-fx-color: white;"
+				+ "-fx-display: inline;"
+				+ "-fx-text-align: center;"
+				+ "-fx-border-width: 3px;"
+				+ "-fx-border-style: solid;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius:15px;"
+				+ "-fx-padding: 10px;"
+				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/6 + ";");
+		
 		this.labelScore = new Label("" + this.gc.getPlateau().getScoreToString());
+		this.labelScore.setStyle("-fx-font-family: \"arial\";"
+				+ "-fx-color: white;"
+				+ "-fx-display: inline;"
+				+ "-fx-text-align: center;"
+				+ "-fx-border-width: 3px;"
+				+ "-fx-border-style: solid;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius:15px;"
+				+ "-fx-padding: 10px;"
+				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/6 + ";");
+		
+		this.labelScore.setTextFill(Color.WHITE);
+		this.labelTitleScore.setTextFill(Color.WHITE);
+
+		this.labelScore.setPadding(new Insets(40));
 		
 		this.containerButton = new HBox();
 		this.restart = new Button("RESTART");
+		this.restart.setStyle("-fx-background-color : Black;"
+				+ "-fx-border: solid;"
+				+ "-fx-border-width: 3px;"
+				+ "-fx-border-color: white;"
+				+ "-fx-border-radius:15px;"
+				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
 		this.exitGame = new Button("EXIT GAME");
+		this.exitGame.setStyle("-fx-background-color : Black;"
+				+ "-fx-border: solid;"
+				+ "-fx-border-width: 3px;"
+				+ "-fx-border-color: white;"
+				+ "-fx-border-radius:15px;"
+				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
 		this.containerButton.getChildren().add(this.restart);
 		this.containerButton.getChildren().add(this.exitGame);
 		
-		this.applyStyleOnInformation();
+		this.informations.setAlignment(Pos.CENTER);
+		this.containerButton.setAlignment(this.informations.getAlignment());
+		
+		//this.applyStyleOnInformation();
 	}
 
 	private void applyStyleOnInformation() {
 		// TODO Auto-generated method stub
 		this.applyStyleOnLabel(this.labelTitleScore);
-		double paddLeft = this.gc.getPlateau().getScoreToString().length() /2 * 12;
-		this.labelScore.setPadding(new Insets(0, 0, 0, paddLeft));
+		//double paddLeft = this.gc.getPlateau().getScoreToString().length() /2 * 12;
+		//this.labelScore.setPadding(new Insets(0, 0, 0, paddLeft));
 		//this.applyStyleOnLabel(this.labelScore);
 		//this.applyStyleOnButton(this.restart);
 		//this.applyStyleOnButton(this.exitGame);
