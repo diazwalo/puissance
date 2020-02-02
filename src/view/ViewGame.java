@@ -8,7 +8,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -18,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -156,28 +156,53 @@ public class ViewGame {
 	private void refreshViewPlateau() {
 		for (int row = 0; row < gc.getPlateau().getPlateau().length; row++) {
 			for (int col = 0; col < gc.getPlateau().getPlateau()[row].length; col++) {
-				StackPane stack = new StackPane();
-				Rectangle rec = new Rectangle();
-				double pow = this.gc.getPlateau().getPlateau()[row][col].getContent().getPow();
-				double color = (pow * 0.042) % 1;
-				
-				rec.setWidth(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
-				rec.setHeight(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
-				rec.setFill(new Color(color, color, color, 1.0));
-				rec.setStroke(new Color((240.0/255), (195.0/255), 0.0, 1.0));
-				this.sizeCell = rec.getWidth();
-				
-				Text text = new Text(gc.getPlateau().getPlateau()[row][col].getContent().toString());
-				text.setFill(Color.DARKRED/*new Color(1-color, 1-color, 1-color, 1.0)*/);
-				text.setFont(Font.font(0.3 * rec.getHeight()));
-				
-				stack.getChildren().addAll(rec, text);
+				StackPane stack = drawStack(row, col);
 				
 				GridPane.setRowIndex(stack, col);
 				GridPane.setColumnIndex(stack, row);
 				this.pane.getChildren().addAll(stack);
 			}
 		}
+	}
+
+	/**
+	 * Dessine la cellule du tableau à l'indice indiqué par la colone et la ligne passé en parametre
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	private StackPane drawStack(int row, int col) {
+		StackPane stack = new StackPane();
+		Rectangle rec = new Rectangle();
+		Text text = new Text();
+		
+		double pow = this.gc.getPlateau().getPlateau()[row][col].getContent().getPow();
+		rec.setWidth(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
+		rec.setHeight(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
+		this.sizeCell = rec.getWidth();
+		
+		if(! this.gc.getPlateau().isImgContent()) {
+			double color = Double.parseDouble(this.gc.getPlateau().getFillForPow((int)pow));
+			
+			rec.setFill(new Color(color, color, color, 1.0));
+			
+			text = new Text(gc.getPlateau().getPlateau()[row][col].getContent().toString());
+			text.setFill(Color.DARKRED); 
+			/*new Color(1-color, 1-color, 1-color, 1.0)  
+			 * si on veut l'inverse de la couleur de l'ecriture
+			 */
+			text.setFont(Font.font(0.3 * rec.getHeight()));
+		}else {
+			if(pow == 0) {
+				rec.setFill(new Color(0.0, 0.0, 0.0, 1.0));
+			}else {
+				rec.setFill(new ImagePattern(new Image(this.gc.getPlateau().getFillForPow((int)pow))));
+			}
+		}
+		
+		rec.setStroke(new Color((240.0/255), (195.0/255), 0.0, 1.0));
+		stack.getChildren().addAll(rec, text);
+		return stack;
 	}
 	
 	private void refreshViewInformation() {
