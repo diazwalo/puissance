@@ -13,7 +13,7 @@ public class TestPlateauMethode {
 	}
 
 	/**
-	 * Applique le mouvment passé en parametre sur le plateau contenant 3 cases.
+	 * Applique le mouvment passÃ© en parametre sur le plateau contenant 3 cases.
 	 * Retourne le tableau contenant le resultat attendu apres l'operation "move"
 	 * @param mvt
 	 * @return Case[][] expected
@@ -35,7 +35,7 @@ public class TestPlateauMethode {
 	}
 
 	/**
-	 * Place dans le tableau 3 cases à la puissance 1.
+	 * Place dans le tableau 3 cases Ã  la puissance 1.
 	 * On obtient un resultat de cette forme :
 	 * 
 	 *  [  ,  ,  ,  ]
@@ -53,7 +53,7 @@ public class TestPlateauMethode {
 	}
 
 	/**
-	 * Modifie le tablea de case passé en parametre pour qu'il contienne le
+	 * Modifie le tablea de case passÃ© en parametre pour qu'il contienne le
 	 * resultat attendu apres le mouvment mvt lui aussi en parametre
 	 * 
 	 * @param mvt
@@ -81,8 +81,8 @@ public class TestPlateauMethode {
 	}
 
 	/**
-	 * Applique le mouvment passé en parametre sur le plateau contenant 3 cases.
-	 * Puis applique la fusion des cases du à ce meme mvt.
+	 * Applique le mouvment passÃ© en parametre sur le plateau contenant 3 cases.
+	 * Puis applique la fusion des cases du Ã  ce meme mvt.
 	 * Retourne le tableau contenant le resultat attendu apres l'operation "fusion"
 	 * 
 	 * @param mvt
@@ -99,7 +99,7 @@ public class TestPlateauMethode {
 	
 	/**
 	 * /**
-	 * Modifie le tablea de case passé en parametre pour qu'il contienne le
+	 * Modifie le tablea de case passÃ© en parametre pour qu'il contienne le
 	 * resultat attendu apres la fusion du au mvt lui aussi en parametre
 	 * 
 	 * @param mvt
@@ -139,7 +139,7 @@ public class TestPlateauMethode {
 	
 	/*
 	 * Bloque presque le tablea de Cases.
-	 * (tableau plein mais 2 cases peuvent être fusionnées).
+	 * (tableau plein mais 2 cases peuvent Ãªtre fusionnÃ©es).
 	 */
 	protected void setPlateauAlmostBlocked() {
 		setPlateauBlocked();

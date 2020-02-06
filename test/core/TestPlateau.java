@@ -28,14 +28,14 @@ public class TestPlateau {
 
 	@Test
 	public void test_taille_plateau() {
-		// plateau4par4 est initialisé à 4 de longueur si on ne donne pas de taille
+		// plateau4par4 est initialisÃ© Ã  4 de longueur si on ne donne pas de taille
 		assertTrue(plateau4par4.getPlateau().length == 4);
 		assertTrue(plateau4par4.getPlateau()[0].length == 4);
 		
 		assertTrue(plateau8par8.getPlateau().length == 8);
 		assertTrue(plateau8par8.getPlateau()[0].length == 8);
 		
-		// plateau2par2 sera initialisé à 4 de longueur car c'est le minimum
+		// plateau2par2 sera initialisÃ© Ã  4 de longueur car c'est le minimum
 		assertTrue(plateau2par2.getPlateau().length == 4);
 		assertTrue(plateau2par2.getPlateau()[0].length == 4);
 	}
@@ -48,6 +48,18 @@ public class TestPlateau {
 				assertEquals(cellule.getContent(), new CaseContent(0));
 			}
 		}
+	}
+	
+	@Test
+	public void test_tableau_case_vide() {
+		this.plateau4par4.fillPlateauWithZero();
+		assertEquals(16, this.plateau4par4.getEmptyCase().size());
+		
+		this.plateau4par4.getPlateau()[0][0] = new Case(new CaseContent(1));
+		assertEquals(15, this.plateau4par4.getEmptyCase().size());
+		
+		methode.setPlateauBlocked();
+		assertEquals(0, this.plateau4par4.getEmptyCase().size());
 	}
 
 	@Test

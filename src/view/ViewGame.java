@@ -166,7 +166,7 @@ public class ViewGame {
 	}
 
 	/**
-	 * Dessine la cellule du tableau à l'indice indiqué par la colone et la ligne passé en parametre
+	 * Dessine la cellule du tableau Ã  l'indice indiquÃ© par la colone et la ligne passÃ© en parametre
 	 * @param row
 	 * @param col
 	 * @return
@@ -288,12 +288,12 @@ public class ViewGame {
 	
 	public void verifEnd() {
 		if(this.gc.getPlateau().isWin()) {
-			Stage endStage = this.createEndScreen(this.gc.getPlateau().isWin());
+			Stage endStage = this.createEndScreen(true);
 			this.setOnActionEndScreen(endStage, true);
 			this.applyStyleVerifEnd();
 		}
 		if(this.gc.getPlateau().isBlocked()) {
-			Stage endStage = this.createEndScreen(this.gc.getPlateau().isWin());
+			Stage endStage = this.createEndScreen(false);
 			this.setOnActionEndScreen(endStage, false);
 			this.applyStyleVerifEnd();
 			this.applyStyleVerifEnd();

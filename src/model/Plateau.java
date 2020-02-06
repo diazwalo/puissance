@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Plateau {
@@ -32,7 +34,7 @@ public class Plateau {
 				"kotaro_9.jfif",
 				"renji_10.jfif",
 				"ken_11.jfif",
-				"kuzen_12.jfif",
+				"kuzen_12.jpg",
 				"kishio_13.jfif",
 				"hideyoshi_14.jfif",
 				"eto_15.jfif",
@@ -109,35 +111,39 @@ public class Plateau {
 	public void fillPlateauWithZero() {
 		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-				this.plateau[idxTabX][idxTabY] = new Case(new CaseContent(0));
+				this.plateau[idxTabY][idxTabX] = new Case(new CaseContent(0));
 			}
 		}
 	}
 
 	public void generateRandomCase() {
-		int[] posRan = this.getRandomPosition(this.plateau.length, this.plateau.length);
-		
-		while(! this.plateau[posRan[0]][posRan[1]].equals(new Case(new CaseContent(0)))) {
-			posRan = this.getRandomPosition(this.plateau.length, this.plateau.length);
-		}
+		List<int[]> emptyCase = getEmptyCase();
 		
 		Random ran = new Random();
+		int[] idxCaseRandom = emptyCase.get(ran.nextInt(emptyCase.size()));
 		int perCent = ran.nextInt(100);
+		
 		if(perCent < 80) {
-			this.plateau[posRan[0]][posRan[1]] = new Case(new CaseContent(1));
+			this.plateau[idxCaseRandom[0]][idxCaseRandom[1]] = new Case(new CaseContent(1));
 		}else {
-			this.plateau[posRan[0]][posRan[1]] = new Case(new CaseContent(2));
+			this.plateau[idxCaseRandom[0]][idxCaseRandom[1]] = new Case(new CaseContent(2));
 		}
 	}
 	
-	protected int[] getRandomPosition(int rangeX, int rangeY) {
-		int[] randomPos = new int[] {0, 0};
-		Random ran = new Random();
-		randomPos[0] = ran.nextInt(rangeX);
-		randomPos[1] = ran.nextInt(rangeY);
-		return randomPos;
+	public List<int[]> getEmptyCase() {
+		List<int[]> emptyCase = new ArrayList<>();
+		
+		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
+			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
+				if(this.plateau[idxTabY][idxTabX].getContent().getPow() == 0) {
+					emptyCase.add(new int[] {idxTabY, idxTabX});
+				}
+			}
+		}
+		
+		return emptyCase;
 	}
-	
+
 	public String toString() {
 		String res = "";
 		
