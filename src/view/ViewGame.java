@@ -140,17 +140,6 @@ public class ViewGame {
 		this.informations.setAlignment(Pos.CENTER);
 		this.containerButton.setAlignment(this.informations.getAlignment());
 		
-		//this.applyStyleOnInformation();
-	}
-
-	private void applyStyleOnInformation() {
-		// TODO Auto-generated method stub
-		this.applyStyleOnLabel(this.labelTitleScore);
-		//double paddLeft = this.gc.getPlateau().getScoreToString().length() /2 * 12;
-		//this.labelScore.setPadding(new Insets(0, 0, 0, paddLeft));
-		//this.applyStyleOnLabel(this.labelScore);
-		//this.applyStyleOnButton(this.restart);
-		//this.applyStyleOnButton(this.exitGame);
 	}
 
 	private void refreshViewPlateau() {
@@ -295,7 +284,6 @@ public class ViewGame {
 		if(this.gc.getPlateau().isBlocked()) {
 			Stage endStage = this.createEndScreen(false);
 			this.setOnActionEndScreen(endStage, false);
-			this.applyStyleVerifEnd();
 			this.applyStyleVerifEnd();
 		}
 	}

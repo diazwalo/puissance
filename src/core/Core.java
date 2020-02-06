@@ -3,10 +3,6 @@ package core;
 import game.GameClassic;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.Case;
-import model.CaseContent;
-import model.Movment;
-import model.Plateau;
 import view.ViewGame;
 
 public class Core extends Application{
