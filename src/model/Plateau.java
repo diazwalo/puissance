@@ -7,6 +7,7 @@ import java.util.Random;
 public class Plateau {
 	protected Case[][] plateau;
 	protected Content content;
+	protected view.Texture texture;
 	private int score;
 	private boolean win = false;
 	private final int MINIMAL_POW_TO_WIN;
@@ -21,25 +22,25 @@ public class Plateau {
 		this.score = 0;
 		this.MINIMAL_POW_TO_WIN = 11; //Car 2^11 6 -> 2048
 		this.content = new Content();
-		//this.fillContent();
-		this.fillContentWithImg(new String [] {
-				"lize_1.jfif",
-				"nishiki_2.jfif",
-				"shuu_3.jfif", 
-				"ayato_4.jfif",
-				"yamori_5.jfif",
-				"yukinori_6.jfif",
-				"juzo_7.jfif",
-				"akira_8.jfif",
-				"kotaro_9.jfif",
-				"renji_10.jfif",
-				"ken_11.jfif",
-				"kuzen_12.jpg",
-				"kishio_13.jfif",
-				"hideyoshi_14.jfif",
-				"eto_15.jfif",
-				"kichimura_16.jfif"
-		});
+		this.fillContent();
+//		this.fillContentWithImg(new String [] {
+//				"lize_1.jfif",
+//				"nishiki_2.jfif",
+//				"shuu_3.jfif", 
+//				"ayato_4.jfif",
+//				"yamori_5.jfif",
+//				"yukinori_6.jfif",
+//				"juzo_7.jfif",
+//				"akira_8.jfif",
+//				"kotaro_9.jfif",
+//				"renji_10.jfif",
+//				"ken_11.jfif",
+//				"kuzen_12.jpg",
+//				"kisho_13.jfif",
+//				"hideyoshi_14.jfif",
+//				"eto_15.jfif",
+//				"kichimura_16.jfif"
+//		});
 	}
 
 	public Plateau () {
@@ -61,22 +62,25 @@ public class Plateau {
 	public void majScore(int pow) {
 		this.score += Math.pow(2, pow);
 	}
+	
+	public Content getContent() {
+		return this.content;
+	}
 
 	public int getMinimalPowToWin() {
 		return this.MINIMAL_POW_TO_WIN;
 	}
 	
 	public void fillContent() {
-		//this.content.setFillForPow(0, "0.0");
 		for (int i = 0; i < 17; i++) {
-			double color = (i * 0.072) % 1;
+			double color = (i * 0.042) % 1;
 			this.content.setFillForPow(i, color+"");
 		}
 	}
 	
 	public void fillContentWithImg(String[] pathImg) {
 		this.content.setFillForPow(0, "0.0");
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < pathImg.length; i++) {
 			this.content.setFillForPow((i+1), pathImg[i]);
 		}
 		this.content.setImgContent(true);

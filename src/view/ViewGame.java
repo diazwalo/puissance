@@ -17,12 +17,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Content;
 import model.Movment;
 
 public class ViewGame {
@@ -42,6 +42,8 @@ public class ViewGame {
 	private Button keepPlaying;
 	private Button exitTheGame;
 	
+	private Texture texture;
+	
 	public ViewGame(GameClassic gc) {
 		this.gc = gc;
 		this.pane = new GridPane();
@@ -49,6 +51,8 @@ public class ViewGame {
 		this.informations = new VBox();
 
 		this.ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Content c = gc.getPlateau().getContent();
+		this.texture = new Texture(c.getContent().length, c.getContent(), c.isImgContent(), new double[] {240.0/255, 195/255, 0.0});
 	}
 
 	public void createScene(Stage stage) {
@@ -169,27 +173,16 @@ public class ViewGame {
 		rec.setWidth(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
 		rec.setHeight(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
 		this.sizeCell = rec.getWidth();
+
+		rec.setFill(texture.getTexturePaint((int)pow));
 		
 		if(! this.gc.getPlateau().isImgContent()) {
-			double color = Double.parseDouble(this.gc.getPlateau().getFillForPow((int)pow));
-			
-			rec.setFill(new Color(color, color, color, 1.0));
-			
 			text = new Text(gc.getPlateau().getPlateau()[row][col].getContent().toString());
-			text.setFill(Color.DARKRED); 
-			/*new Color(1-color, 1-color, 1-color, 1.0)  
-			 * si on veut l'inverse de la couleur de l'ecriture
-			 */
+			text.setFill(((Color)(rec.getFill())).invert()); 
 			text.setFont(Font.font(0.3 * rec.getHeight()));
-		}else {
-			if(pow == 0) {
-				rec.setFill(new Color(0.0, 0.0, 0.0, 1.0));
-			}else {
-				rec.setFill(new ImagePattern(new Image(this.gc.getPlateau().getFillForPow((int)pow))));
-			}
 		}
 		
-		rec.setStroke(new Color((240.0/255), (195.0/255), 0.0, 1.0));
+		rec.setStroke(this.texture.getStrokeColor());
 		stack.getChildren().addAll(rec, text);
 		return stack;
 	}
@@ -289,14 +282,11 @@ public class ViewGame {
 	}
 	
 	private void applyStyleVerifEnd() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	private void setOnActionEndScreen(Stage endStage, boolean win) {
-		// TODO Auto-generated method stub
 		keepPlaying.setOnAction(e -> {
-			//this.createScene(stage);
 			if(win) {
 				endStage.hide();
 				this.stage.setScene(this.sc);
@@ -338,8 +328,6 @@ public class ViewGame {
 		
 		winScreenScene = new Scene(endScreen);
 		
-		//this.stage.hide();
-		
 		Stage endStage = new Stage();
 		endStage.setScene(winScreenScene);
 		endStage.centerOnScreen();
@@ -349,14 +337,6 @@ public class ViewGame {
 		return endStage;
 	}
 	
-	public void applyStyleOnLabel(Label l) {
-		l.setPadding(new Insets(this.getWinHeight() / 2, 0, 0, 0));
-	}
-	
-	public void applyStyleOnButton(Button b) {
-		b.setPadding(new Insets(this.getWinHeight() / 2, 0, 0, 0));
-	}
-
 	public double getWinHeight() {
 		return this.ge.getMaximumWindowBounds().getHeight();
 	}

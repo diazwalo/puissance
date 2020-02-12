@@ -1,35 +1,28 @@
 package model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Content {
-	protected Map<Integer, String> fillAssociateToPow;
+	protected String[] fillAssociateToPow;
 	protected boolean imgContent;
 	
 	public Content() {
-		this.fillAssociateToPow = new HashMap<>();
+		this.fillAssociateToPow = new String[17];
 		this.imgContent = false;
 	}
 	
-	public Map<Integer, String> getContent() {
+	public String[] getContent() {
 		return this.fillAssociateToPow;
 	}
 	
-	public void setContent(Map<Integer, String> fillAssociateToPow) {
+	public void setContent(String[] fillAssociateToPow) {
 		this.fillAssociateToPow = fillAssociateToPow;
 	}
 	
-	public void setFillForPow(Integer pow, String newFill) {
-		this.fillAssociateToPow.put(pow, newFill);
+	public void setFillForPow(int pow, String newFill) {
+		this.fillAssociateToPow[pow] = newFill;
 	}
 	
-	public String getFillForPow(Integer pow) {
-		return this.fillAssociateToPow.get(pow);
-	}
-	
-	public boolean isContentFull(int sizeOfPlateau) {
-		return Math.pow(sizeOfPlateau, 2) <= this.fillAssociateToPow.size() - 1; 
+	public String getFillForPow(int pow) {
+		return this.fillAssociateToPow[pow];
 	}
 	
 	public boolean isImgContent() {
@@ -40,10 +33,14 @@ public class Content {
 		this.imgContent = b;
 	}
 	
+	public String[] getFillAssociateToPow() {
+		return this.fillAssociateToPow.clone();
+	}
+	
 	public String toString() {
 		String res = "[";
-		for (Integer pow : this.fillAssociateToPow.keySet()) {
-			res += pow + " -> " + this.fillAssociateToPow.get(pow) + "\n";
+		for (int idx = 0; idx < this.fillAssociateToPow.length; idx ++) {
+			res += idx + " -> " + this.fillAssociateToPow[idx] + "\n";
 		}
 		return res + "]";
 	}
