@@ -3,56 +3,51 @@ package view;
 import java.awt.GraphicsEnvironment;
 
 import game.GameClassic;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Content;
 import model.Movment;
 
 public class ViewGame {
-	private GameClassic gc;
 	private Stage stage;
 	private Scene sc;
-	private Pane pane;
-	private HBox core;
-	private GraphicsEnvironment ge;
-	private double sizeCell;
-	private VBox informations;
-	private Label labelScore;
-	private Label labelTitleScore;
+	
+	private static GraphicsEnvironment ge;
+	
+	private HBox viewGame;
+	private ViewInformation viewInfo;
+	private ViewPlateau viewPlateau;
+	
 	private HBox containerButton;
-	private Button restart;
-	private Button exitGame;
 	private Button keepPlaying;
 	private Button exitTheGame;
 	
 	private Texture texture;
 	
+	private GameClassic gc;
+	
 	public ViewGame(GameClassic gc) {
 		this.gc = gc;
-		this.pane = new GridPane();
-		this.core = new HBox();
-		this.informations = new VBox();
+		//this.pane = new GridPane();
+		this.viewGame = new HBox();
+		//this.informations = new VBox();
+		
+		this.containerButton = new HBox();
 
-		this.ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Content c = gc.getPlateau().getContent();
 		this.texture = new Texture(c.getContent().length, c.getContent(), c.isImgContent(), new double[] {240.0/255, 195/255, 0.0});
+		
+		this.viewPlateau = new ViewPlateau(this.gc, this.texture);
+	    this.viewInfo = new ViewInformation(this.gc, this.containerButton);
 	}
 
 	public void createScene(Stage stage) {
@@ -61,102 +56,109 @@ public class ViewGame {
 	    this.stage.getIcons().add(new Image("laPuissance.jpg"));
 	    this.stage.setMaximized(true);
 	    this.stage.setResizable(false);
-	    this.stage.setMaxHeight(this.getWinHeight());
-	    this.stage.setMaxWidth(this.getWinWidth());
+	    this.stage.setMaxHeight(getWinHeight());
+	    this.stage.setMaxWidth(getWinWidth());
 	    
-		this.refreshViewPlateau();
-		this.core.getChildren().add(pane);
-		this.createViewInformation();
-		
-		this.informations.getChildren().add(labelTitleScore);
-		this.informations.getChildren().add(labelScore);
-		this.informations.getChildren().add(new Label());
-		this.informations.getChildren().add(this.containerButton);
-		
-		this.informations.setStyle("-fx-text-align: center;");
-		this.core.getChildren().add(informations);
-		
-		this.sc = new Scene(this.core);
+//		this.refreshViewPlateau();
+//		this.viewGame.getChildren().add(pane);
+//		this.createViewInformation();
+//		
+//		this.informations.getChildren().add(labelTitleScore);
+//		this.informations.getChildren().add(labelScore);
+//		this.informations.getChildren().add(new Label());
+//		this.informations.getChildren().add(this.containerButton);
+//		
+//		this.informations.setStyle("-fx-text-align: center;");
+//		this.viewGame.getChildren().add(informations);
+	    
+	    this.viewPlateau.refreshViewPlateau();
+	    this.viewGame.getChildren().add(this.viewPlateau.getViewPlateau());
+	    this.viewInfo.createViewInformation(this.viewPlateau.getSizeCell());
+	    this.viewGame.getChildren().add(this.viewInfo.getViewInformation());
+	    
+	    this.containerButton = this.viewInfo.getContainerButton();
+	    
+		this.sc = new Scene(this.viewGame);
 		this.addEventToStage();
 		this.stage.setScene(this.sc);
 		
 		this.stage.show();
 	}
-	
-	private void createViewInformation() {
-		this.core.setStyle("-fx-background-color : #F0C300;"
-				+ "-fx-color : #F0C300;");
-		
-		this.informations.setMaxSize(this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length, this.getWinHeight());
-		
-		this.labelTitleScore = new Label("SCORE :");
-		this.labelTitleScore.setStyle("-fx-font-family: \"arial\";"
-				+ "-fx-color: white;"
-				+ "-fx-display: inline;"
-				+ "-fx-text-align: center;"
-				+ "-fx-border-width: 3px;"
-				+ "-fx-border-style: solid;"
-				+ "-fx-border-color: black;"
-				+ "-fx-border-radius:15px;"
-				+ "-fx-padding: 10px;"
-				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/6 + ";");
-		
-		this.labelScore = new Label("" + this.gc.getPlateau().getScoreToString());
-		this.labelScore.setStyle("-fx-font-family: \"arial\";"
-				+ "-fx-color: white;"
-				+ "-fx-display: inline;"
-				+ "-fx-text-align: center;"
-				+ "-fx-border-width: 3px;"
-				+ "-fx-border-style: solid;"
-				+ "-fx-border-color: black;"
-				+ "-fx-border-radius:15px;"
-				+ "-fx-padding: 10px;"
-				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/6 + ";");
-		
-		this.labelScore.setTextFill(Color.RED);
-		this.labelTitleScore.setTextFill(Color.RED);
+//	
+//	private void createViewInformation() {
+//		this.viewGame.setStyle("-fx-background-color : #F0C300;"
+//				+ "-fx-color : #F0C300;");
+//		
+//		this.informations.setMaxSize(this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length, this.getWinHeight());
+//		
+//		this.labelTitleScore = new Label("SCORE :");
+//		this.labelTitleScore.setStyle("-fx-font-family: \"arial\";"
+//				+ "-fx-color: white;"
+//				+ "-fx-display: inline;"
+//				+ "-fx-text-align: center;"
+//				+ "-fx-border-width: 3px;"
+//				+ "-fx-border-style: solid;"
+//				+ "-fx-border-color: black;"
+//				+ "-fx-border-radius:15px;"
+//				+ "-fx-padding: 10px;"
+//				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/6 + ";");
+//		
+//		this.labelScore = new Label("" + this.gc.getPlateau().getScoreToString());
+//		this.labelScore.setStyle("-fx-font-family: \"arial\";"
+//				+ "-fx-color: white;"
+//				+ "-fx-display: inline;"
+//				+ "-fx-text-align: center;"
+//				+ "-fx-border-width: 3px;"
+//				+ "-fx-border-style: solid;"
+//				+ "-fx-border-color: black;"
+//				+ "-fx-border-radius:15px;"
+//				+ "-fx-padding: 10px;"
+//				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/6 + ";");
+//		
+//		this.labelScore.setTextFill(Color.RED);
+//		this.labelTitleScore.setTextFill(Color.RED);
+//
+//		this.labelScore.setPadding(new Insets(40));
+//		
+//		this.containerButton = new HBox();
+//		this.restart = new Button("RESTART");
+//		this.restart.setStyle("-fx-border: solid;"
+//				+ "-fx-background-color : #F0C300;"
+//				+ "-fx-border-width: 3px;"
+//				+ "-fx-border-color: black;"
+//				+ "-fx-border-radius:15px;"
+//				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
+//		this.exitGame = new Button("EXIT GAME");
+//		this.exitGame.setStyle("-fx-border: solid;"
+//				+ "-fx-background-color : #F0C300;"
+//				+ "-fx-border-width: 3px;"
+//				+ "-fx-border-color: black;"
+//				+ "-fx-border-radius:15px;"
+//				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
+//		this.exitGame.setTextFill(Color.RED);
+//		this.restart.setTextFill(Color.RED);
+//		
+//		
+//		
+//		this.containerButton.getChildren().add(this.restart);
+//		this.containerButton.getChildren().add(this.exitGame);
+//		
+//		this.informations.setAlignment(Pos.CENTER);
+//		this.containerButton.setAlignment(this.informations.getAlignment());
+//		
+//	}
 
-		this.labelScore.setPadding(new Insets(40));
-		
-		this.containerButton = new HBox();
-		this.restart = new Button("RESTART");
-		this.restart.setStyle("-fx-border: solid;"
-				+ "-fx-background-color : #F0C300;"
-				+ "-fx-border-width: 3px;"
-				+ "-fx-border-color: black;"
-				+ "-fx-border-radius:15px;"
-				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
-		this.exitGame = new Button("EXIT GAME");
-		this.exitGame.setStyle("-fx-border: solid;"
-				+ "-fx-background-color : #F0C300;"
-				+ "-fx-border-width: 3px;"
-				+ "-fx-border-color: black;"
-				+ "-fx-border-radius:15px;"
-				+ "-fx-font-size : " + (this.getWinWidth() - this.sizeCell*this.gc.getPlateau().getPlateau().length)/12 + ";");
-		this.exitGame.setTextFill(Color.RED);
-		this.restart.setTextFill(Color.RED);
-		
-		
-		
-		this.containerButton.getChildren().add(this.restart);
-		this.containerButton.getChildren().add(this.exitGame);
-		
-		this.informations.setAlignment(Pos.CENTER);
-		this.containerButton.setAlignment(this.informations.getAlignment());
-		
-	}
-
-	private void refreshViewPlateau() {
-		for (int row = 0; row < gc.getPlateau().getPlateau().length; row++) {
-			for (int col = 0; col < gc.getPlateau().getPlateau()[row].length; col++) {
-				StackPane stack = drawStack(row, col);
-				
-				GridPane.setRowIndex(stack, col);
-				GridPane.setColumnIndex(stack, row);
-				this.pane.getChildren().addAll(stack);
-			}
-		}
-	}
+//	private void refreshViewPlateau() {
+//		for (int row = 0; row < gc.getPlateau().getPlateau().length; row++) {
+//			for (int col = 0; col < gc.getPlateau().getPlateau()[row].length; col++) {
+//				StackPane stack = drawStack(row, col);
+//				
+//				GridPane.setRowIndex(stack, col);
+//				GridPane.setColumnIndex(stack, row);
+//				this.pane.getChildren().addAll(stack);
+//			}
+//		}
+//	}
 
 	/**
 	 * Dessine la cellule du tableau à l'indice indiqué par la colone et la ligne passé en parametre
@@ -164,32 +166,32 @@ public class ViewGame {
 	 * @param col
 	 * @return
 	 */
-	private StackPane drawStack(int row, int col) {
-		StackPane stack = new StackPane();
-		Rectangle rec = new Rectangle();
-		Text text = new Text();
-		
-		double pow = this.gc.getPlateau().getPlateau()[row][col].getContent().getPow();
-		rec.setWidth(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
-		rec.setHeight(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
-		this.sizeCell = rec.getWidth();
-
-		rec.setFill(texture.getTexturePaint((int)pow));
-		
-		if(! this.gc.getPlateau().isImgContent()) {
-			text = new Text(gc.getPlateau().getPlateau()[row][col].getContent().toString());
-			text.setFill(((Color)(rec.getFill())).invert()); 
-			text.setFont(Font.font(0.3 * rec.getHeight()));
-		}
-		
-		rec.setStroke(this.texture.getStrokeColor());
-		stack.getChildren().addAll(rec, text);
-		return stack;
-	}
-	
-	private void refreshViewInformation() {
-		this.labelScore.setText("" + this.gc.getPlateau().getScoreToString());
-	}
+//	private StackPane drawStack(int row, int col) {
+//		StackPane stack = new StackPane();
+//		Rectangle rec = new Rectangle();
+//		Text text = new Text();
+//		
+//		double pow = this.gc.getPlateau().getPlateau()[row][col].getContent().getPow();
+//		rec.setWidth(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
+//		rec.setHeight(this.getWinHeight() / this.gc.getPlateau().getPlateau().length);
+//		this.sizeCell = rec.getWidth();
+//
+//		rec.setFill(texture.getTexturePaint((int)pow));
+//		
+//		if(! this.gc.getPlateau().isImgContent()) {
+//			text = new Text(gc.getPlateau().getPlateau()[row][col].getContent().toString());
+//			text.setFill(((Color)(rec.getFill())).invert()); 
+//			text.setFont(Font.font(0.3 * rec.getHeight()));
+//		}
+//		
+//		rec.setStroke(this.texture.getStrokeColor());
+//		stack.getChildren().addAll(rec, text);
+//		return stack;
+//	}
+//	
+//	private void refreshViewInformation() {
+//		this.labelScore.setText("" + this.gc.getPlateau().getScoreToString());
+//	}
 
 	private void addEventToStage() {
 		this.stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
@@ -242,14 +244,14 @@ public class ViewGame {
 	
 	private void setOnActionInformation() {
 		// TODO Auto-generated method stub
-		this.exitGame.setOnAction(e -> {
+		((Button) this.containerButton.getChildren().get(1)).setOnAction(e -> {
 			System.exit(0);
 		});
 		
-		this.restart.setOnAction(e -> {
+		((Button) this.containerButton.getChildren().get(0)).setOnAction(e -> {
 			this.gc.resetPlateau();
-			this.refreshViewPlateau();
-			this.refreshViewInformation();
+			this.viewPlateau.refreshViewPlateau();
+			this.viewInfo.refreshViewInformation();
 		});
 	}
 
@@ -261,13 +263,13 @@ public class ViewGame {
 		if(mvtDone) {
 			this.gc.getPlateau().move(movment);
 			this.gc.getPlateau().generateRandomCase();
-			this.refreshViewPlateau();
-			this.refreshViewInformation();
+			this.viewPlateau.refreshViewPlateau();
+			this.viewInfo.refreshViewInformation();
 		}
 		
 		this.verifEnd();
 	}
-	
+
 	public void verifEnd() {
 		if(this.gc.getPlateau().isWin()) {
 			Stage endStage = this.createEndScreen(true);
@@ -296,8 +298,8 @@ public class ViewGame {
 				this.stage.setScene(this.sc);
 				this.stage.show();
 				this.gc.resetPlateau();
-				this.refreshViewPlateau();
-				this.refreshViewInformation();
+				this.viewPlateau.refreshViewPlateau();
+				this.viewInfo.refreshViewInformation();
 			}
 		});
 		
@@ -337,11 +339,11 @@ public class ViewGame {
 		return endStage;
 	}
 	
-	public double getWinHeight() {
-		return this.ge.getMaximumWindowBounds().getHeight();
+	public static double getWinHeight() {
+		return ge.getMaximumWindowBounds().getHeight();
 	}
 	
-	public double getWinWidth() {
-		return this.ge.getMaximumWindowBounds().getWidth();
+	public static double getWinWidth() {
+		return ge.getMaximumWindowBounds().getWidth();
 	}
 }

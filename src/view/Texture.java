@@ -31,7 +31,6 @@ public class Texture {
 		double color = Double.parseDouble(fillAssociateToPow[0]);
 		texturePaint[0] = (Paint)(new Color(color, color, color, 1.0));
 		for (int idx = 1; idx < fillAssociateToPow.length; idx++) {
-			System.out.println(fillAssociateToPow[idx]);
 			texturePaint[idx] = (Paint)(new ImagePattern(new Image(fillAssociateToPow[idx])));
 		}
 	}

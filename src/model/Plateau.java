@@ -22,25 +22,25 @@ public class Plateau {
 		this.score = 0;
 		this.MINIMAL_POW_TO_WIN = 11; //Car 2^11 6 -> 2048
 		this.content = new Content();
-		this.fillContent();
-//		this.fillContentWithImg(new String [] {
-//				"lize_1.jfif",
-//				"nishiki_2.jfif",
-//				"shuu_3.jfif", 
-//				"ayato_4.jfif",
-//				"yamori_5.jfif",
-//				"yukinori_6.jfif",
-//				"juzo_7.jfif",
-//				"akira_8.jfif",
-//				"kotaro_9.jfif",
-//				"renji_10.jfif",
-//				"ken_11.jfif",
-//				"kuzen_12.jpg",
-//				"kisho_13.jfif",
-//				"hideyoshi_14.jfif",
-//				"eto_15.jfif",
-//				"kichimura_16.jfif"
-//		});
+		//this.fillContent();
+		this.fillContentWithImg(new String [] {
+				"lize_1.jfif",
+				"nishiki_2.jfif",
+				"shuu_3.jfif", 
+				"ayato_4.jfif",
+				"yamori_5.jfif",
+				"yukinori_6.jfif",
+				"juzo_7.jfif",
+				"akira_8.jfif",
+				"kotaro_9.jfif",
+				"renji_10.jfif",
+				"ken_11.jfif",
+				"kuzen_12.jpg",
+				"kisho_13.jfif",
+				"hideyoshi_14.jfif",
+				"eto_15.jfif",
+				"kichimura_16.jfif"
+		});
 	}
 
 	public Plateau () {
@@ -292,4 +292,8 @@ public class Plateau {
 		}
 		return false;
 	}
+	
+	/**
+	 * Créer une methode qui reset le jeu (plateau et score).
+	 */
 }
