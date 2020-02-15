@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 public class ViewInformation {
 	private VBox viewInformation;
-	private HBox containerButton;
+	private HBox containerButtonInformation;
 	
 	private Label labelScore;
 	private Label labelTitleScore;
@@ -20,9 +20,9 @@ public class ViewInformation {
 	
 	private GameClassic gc;
 	
-	public ViewInformation(GameClassic gc, HBox containerButton) {
+	public ViewInformation(GameClassic gc, HBox containerButtonInformation) {
 		this.viewInformation = new VBox();
-		this.containerButton = containerButton;
+		this.containerButtonInformation = containerButtonInformation;
 		
 		this.gc = gc;
 	}
@@ -66,7 +66,7 @@ public class ViewInformation {
 
 		this.labelScore.setPadding(new Insets(40));
 		
-		this.containerButton = new HBox();
+		this.containerButtonInformation = new HBox();
 		this.restart = new Button("RESTART");
 		this.restart.setStyle("-fx-border: solid;"
 				+ "-fx-background-color : #F0C300;"
@@ -84,15 +84,15 @@ public class ViewInformation {
 		this.exitGame.setTextFill(Color.RED);
 		this.restart.setTextFill(Color.RED);
 		
-		this.containerButton.getChildren().add(this.restart);
-		this.containerButton.getChildren().add(this.exitGame);
+		this.containerButtonInformation.getChildren().add(this.restart);
+		this.containerButtonInformation.getChildren().add(this.exitGame);
 		
 		this.viewInformation.setAlignment(Pos.CENTER);
-		this.containerButton.setAlignment(this.viewInformation.getAlignment());
+		this.containerButtonInformation.setAlignment(this.viewInformation.getAlignment());
 		this.viewInformation.getChildren().add(labelTitleScore);
 		this.viewInformation.getChildren().add(labelScore);
 		this.viewInformation.getChildren().add(new Label());
-		this.viewInformation.getChildren().add(this.containerButton);
+		this.viewInformation.getChildren().add(this.containerButtonInformation);
 	}
 
 	protected void refreshViewInformation() {
@@ -100,6 +100,6 @@ public class ViewInformation {
 	}
 	
 	protected HBox getContainerButton() {
-		return this.containerButton;
+		return this.containerButtonInformation;
 	}
 }

@@ -20,7 +20,7 @@ public class Plateau {
 		}
 		this.initialisePlateau();
 		this.score = 0;
-		this.MINIMAL_POW_TO_WIN = 11; //Car 2^11 6 -> 2048
+		this.MINIMAL_POW_TO_WIN = 11; //Car 2^11 -> 2048
 		this.content = new Content();
 		//this.fillContent();
 		this.fillContentWithImg(new String [] {
