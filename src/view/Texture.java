@@ -1,6 +1,10 @@
 package view;
 
+import java.io.File;
+
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
@@ -8,7 +12,8 @@ import javafx.scene.paint.Paint;
 public class Texture {
 	private Paint[] texturePaint;
 	private Color strokeColor;
-	
+	private Media[] media;
+
 	public Texture(int size, String[] fillAssociateToPow, boolean isImgContent, double[] RGBstrokeColor) {
 		this.texturePaint = new Paint[size];
 		if(isImgContent) {
@@ -17,6 +22,7 @@ public class Texture {
 			this.fillTexture(fillAssociateToPow);	
 		}
 		this.setStrokeColor(RGBstrokeColor);
+		this.loadSound();
 	}
 	
 	private void setStrokeColor(double[] RGBstrokeColor) {
@@ -45,5 +51,15 @@ public class Texture {
 
 	public Paint getTexturePaint(int idx) {
 		return this.texturePaint[idx];
+	}
+	
+	private void loadSound() {
+		this.media = new Media[2];
+		this.media[0] = new Media(new File("sound/dingDoux.wav").toURI().toString());
+		this.media[1] = new Media(new File("sound/dingMetal.wav").toURI().toString());
+	}
+	
+	public MediaPlayer getMediaPlayerAtIdx(int idx) {
+		return new MediaPlayer(this.media[0]);
 	}
 }

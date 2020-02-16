@@ -44,7 +44,6 @@ public class CaseContent {
 	}
 	
 	public boolean equals(Object o) {
-		System.out.println("Expected : " + this.pow + ", was : " + ((CaseContent) (o)).getPow());
 		return this.pow ==  (((CaseContent) (o)).getPow());
 	}
 }

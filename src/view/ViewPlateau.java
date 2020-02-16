@@ -32,7 +32,7 @@ public class ViewPlateau {
 	protected double getSizeCell() {
 		return this.sizeCell;
 	}
-
+	
 	protected void refreshViewPlateau() {
 		for (int row = 0; row < gc.getPlateau().getPlateau().length; row++) {
 			for (int col = 0; col < gc.getPlateau().getPlateau()[row].length; col++) {
@@ -44,7 +44,6 @@ public class ViewPlateau {
 			}
 		}
 	}
-
 
 	/**
 	 * Dessine la cellule du tableau à l'indice indiqué par la colone et la ligne passé en parametre
@@ -74,5 +73,4 @@ public class ViewPlateau {
 		stack.getChildren().addAll(rec, text);
 		return stack;
 	}
-
 }
