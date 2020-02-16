@@ -2,16 +2,21 @@ package view;
 
 import java.awt.GraphicsEnvironment;
 
+import controller.Controller;
 import game.GameClassic;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.Content;
-import model.Movment;
 
 public class ViewGame {
 	private Stage primaryStage;
@@ -31,6 +36,8 @@ public class ViewGame {
 	
 	private GameClassic gc;
 	
+	private Controller controller;
+	
 	public ViewGame(GameClassic gc) {
 		this.gc = gc;
 		this.viewGame = new HBox();
@@ -44,8 +51,10 @@ public class ViewGame {
 		
 		this.viewPlateau = new ViewPlateau(this.gc, this.texture);
 	    this.viewInfo = new ViewInformation(this.gc, this.containerButtonInformation);
+	    
+	    this.controller = new Controller(gc);
 	}
-
+	
 	public void createScene(Stage stage) {
 		this.primaryStage = stage;
 		this.primaryStage.setTitle("La Puissance");
@@ -61,60 +70,29 @@ public class ViewGame {
 	    this.viewGame.getChildren().add(this.viewInfo.getViewInformation());
 	    
 	    this.containerButtonInformation = this.viewInfo.getContainerButton();
-	    
+		applicateStyleOnViewGame();
+		
 		this.sc = new Scene(this.viewGame);
 		this.addEventToStage();
 		this.primaryStage.setScene(this.sc);
 		
 		this.primaryStage.show();
 	}
-
+	
+	private void applicateStyleOnViewGame() {
+		this.viewGame.setBackground(new Background(new BackgroundFill(new Color(240.0/255, 195.0/255, 0.0, 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+	    this.viewGame.setAlignment(Pos.CENTER);
+	}
+	
 	private void addEventToStage() {
 		this.primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-			KeyCode key = e.getCode();
-			String osName = System.getProperty("os.name");
-			if(osName.contentEquals("Mac OS X")) {
-				if(key.equals(KeyCode.W) || key.equals(KeyCode.S) || key.equals(KeyCode.A) || key.equals(KeyCode.D)) {
-					switch(key) {
-					case W :
-						this.move(Movment.UP);
-						break;
-					case S :
-						this.move(Movment.DOWN);
-						break;
-					case A :
-						this.move(Movment.LEFT);
-						break;
-					case D :
-						this.move(Movment.RIGHT);
-						break;
-					default:
-						break;
-					}
-				}
-
-			}else {	
-				if(key.equals(KeyCode.Z) || key.equals(KeyCode.S) || key.equals(KeyCode.Q) || key.equals(KeyCode.D)) {
-	
-					switch(key) {
-					case Z :
-						this.move(Movment.UP);
-						break;
-					case S :
-						this.move(Movment.DOWN);
-						break;
-					case Q :
-						this.move(Movment.LEFT);
-						break;
-					case D :
-						this.move(Movment.RIGHT);
-						break;
-					default:
-						break;
-					}
-				}
+			if(this.controller.setActionOnPlateau(e)) {
+				this.viewPlateau.refreshViewPlateau();
+				this.viewInfo.refreshViewInformation();
+				this.verifEnd();
 			}
 		});
+			
 		this.setOnActionInformation();
 	}
 	
@@ -129,32 +107,17 @@ public class ViewGame {
 			this.viewInfo.refreshViewInformation();
 		});
 	}
-
-	public void move(Movment movment) {
-		boolean moveDone = this.gc.getPlateau().move(movment);
-		boolean fusionDone = this.gc.getPlateau().fusion(movment);
-		boolean mvtDone = moveDone || fusionDone;
-		
-		if(mvtDone) {
-			this.gc.getPlateau().move(movment);
-			this.gc.getPlateau().generateRandomCase();
-			this.viewPlateau.refreshViewPlateau();
-			this.viewInfo.refreshViewInformation();
-		}
-		
-		this.verifEnd();
-	}
-
+	
 	public void verifEnd() {
 		if(this.gc.getPlateau().isWin()) {
 			this.endStage = this.viewEndScreen.createEndScreen(true);
 			this.setOnActionEndScreen(endStage, true);
 		}else if(this.gc.getPlateau().isBlocked()) {
-			this.endStage = this.viewEndScreen.createEndScreen(true);
+			this.endStage = this.viewEndScreen.createEndScreen(false);
 			this.setOnActionEndScreen(endStage, false);
 		}
 	}
-
+	
 	private void setOnActionEndScreen(Stage endStage, boolean win) {
 		HBox containerButtonEndScreen = this.viewEndScreen.getContainerButtonEndScreen();
 		((Button) containerButtonEndScreen.getChildren().get(0)).setOnAction(e -> {
