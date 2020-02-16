@@ -4,7 +4,7 @@ public class CaseContent {
 	private int pow;
 	
 	public CaseContent() {
-		this(1);
+		this(0);
 	}
 	
 	public CaseContent(int pow) {
@@ -36,7 +36,7 @@ public class CaseContent {
 	}
 	
 	public void incPow() {
-		this.pow ++;
+		++this.pow;
 	}
 	
 	public boolean isNull() {
@@ -44,6 +44,7 @@ public class CaseContent {
 	}
 	
 	public boolean equals(Object o) {
+		System.out.println("Expected : " + this.pow + ", was : " + ((CaseContent) (o)).getPow());
 		return this.pow ==  (((CaseContent) (o)).getPow());
 	}
 }

@@ -69,11 +69,11 @@ public class ViewInformation {
 		this.viewInformation.setAlignment(Pos.CENTER);
 		this.containerButtonInformation.setAlignment(this.viewInformation.getAlignment());
 		
-		applicateStyleOnLabel(sizeCell, this.labelTitleScore);
-		applicateStyleOnLabel(sizeCell, this.labelScore);
+		this.applicateStyleOnLabel(sizeCell, this.labelTitleScore);
+		this.applicateStyleOnLabel(sizeCell, this.labelScore);
 		
-		applicateStyleOnButton(sizeCell, this.buttonRestart);
-		applicateStyleOnButton(sizeCell, this.buttonExitGame);
+		this.applicateStyleOnButton(sizeCell, this.buttonRestart);
+		this.applicateStyleOnButton(sizeCell, this.buttonExitGame);
 	}
 	
 	private void applicateStyleOnLabel(double sizeCell, Label l) {

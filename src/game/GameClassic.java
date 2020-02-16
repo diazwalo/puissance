@@ -19,7 +19,7 @@ public class GameClassic {
 	}
 	
 	public void resetPlateau() {
-		this.p = new Plateau(this.taille);
+		this.p.resetPlateau();
 	}
 	
 	public boolean playGame() {

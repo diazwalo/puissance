@@ -70,7 +70,7 @@ public class ViewGame {
 	    this.viewGame.getChildren().add(this.viewInfo.getViewInformation());
 	    
 	    this.containerButtonInformation = this.viewInfo.getContainerButton();
-		applicateStyleOnViewGame();
+		this.applicateStyleOnViewGame();
 		
 		this.sc = new Scene(this.viewGame);
 		this.addEventToStage();
@@ -86,9 +86,8 @@ public class ViewGame {
 	
 	private void addEventToStage() {
 		this.primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-			if(this.controller.setActionOnPlateau(e)) {
-				this.viewPlateau.refreshViewPlateau();
-				this.viewInfo.refreshViewInformation();
+			if(this.controller.controlActionOnPlateau(e)) {
+				this.refreshViewGame();
 				this.verifEnd();
 			}
 		});
@@ -102,10 +101,14 @@ public class ViewGame {
 		});
 		
 		((Button) this.containerButtonInformation.getChildren().get(0)).setOnAction(e -> {
-			this.gc.resetPlateau();
-			this.viewPlateau.refreshViewPlateau();
-			this.viewInfo.refreshViewInformation();
+			this.controller.controlActionOnInformation();
+			this.refreshViewGame();
 		});
+	}
+
+	private void refreshViewGame() {
+		this.viewPlateau.refreshViewPlateau();
+		this.viewInfo.refreshViewInformation();
 	}
 	
 	public void verifEnd() {
@@ -122,22 +125,23 @@ public class ViewGame {
 		HBox containerButtonEndScreen = this.viewEndScreen.getContainerButtonEndScreen();
 		((Button) containerButtonEndScreen.getChildren().get(0)).setOnAction(e -> {
 			if(win) {
-				endStage.hide();
-				this.primaryStage.setScene(this.sc);
-				this.primaryStage.show();
+				this.hideViewEndScreen(endStage);
 			}else {
-				endStage.hide();
-				this.primaryStage.setScene(this.sc);
-				this.primaryStage.show();
-				this.gc.resetPlateau();
-				this.viewPlateau.refreshViewPlateau();
-				this.viewInfo.refreshViewInformation();
+				this.hideViewEndScreen(endStage);
+				this.controller.controlActionOnEndScreen();
+				this.refreshViewGame();
 			}
 		});
 		
 		((Button) containerButtonEndScreen.getChildren().get(1)).setOnAction(e ->{
 			System.exit(0);
 		});
+	}
+
+	private void hideViewEndScreen(Stage endStage) {
+		this.endStage.hide();
+		this.primaryStage.setScene(this.sc);
+		this.primaryStage.show();
 	}
 	
 	public static double getWinHeight() {

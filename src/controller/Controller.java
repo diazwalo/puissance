@@ -15,13 +15,13 @@ public class Controller {
 		osName = System.getProperty("os.name");
 	}
 
-	public boolean setActionOnPlateau(KeyEvent e) {
+	public boolean controlActionOnPlateau(KeyEvent e) {
 		this.key = e.getCode();
-		
+
 		if(osName.contentEquals("Mac OS X")) {
-				return executeMoveForQWERTY(key);
+			return executeMoveForQWERTY(key);
 		}else {	
-				return executeMoveForAZERTY(key);
+			return executeMoveForAZERTY(key);
 		}
 	}
 
@@ -66,5 +66,14 @@ public class Controller {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean controlActionOnInformation() {
+		this.gc.resetPlateau();
+		return true;
+	}
+
+	public boolean controlActionOnEndScreen() {
+		return this.controlActionOnInformation();
 	}
 }

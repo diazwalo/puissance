@@ -7,10 +7,16 @@ import java.util.Random;
 public class Plateau {
 	protected Case[][] plateau;
 	protected Content content;
+	
 	protected view.Texture texture;
+	
 	private int score;
 	private boolean win = false;
+	protected List<int[]> emptyCase;
+	protected Movment[] tabMovment;
+	
 	private final int MINIMAL_POW_TO_WIN;
+	private final int MAX_SIZE_SCORE_TOSTRING; 
 	
 	public Plateau (int taille) {
 		if(taille < 4) {
@@ -18,9 +24,17 @@ public class Plateau {
 		}else {
 			this.plateau = new Case[taille][taille];
 		}
-		this.initialisePlateau();
+		
 		this.score = 0;
+		this.win = false;
+		this.emptyCase = new ArrayList<int[]>();
+		this.tabMovment = Movment.values();
+		
+		this.initialisePlateau();
+		
 		this.MINIMAL_POW_TO_WIN = 11; //Car 2^11 -> 2048
+		this.MAX_SIZE_SCORE_TOSTRING = 7;
+		
 		this.content = new Content();
 		//this.fillContent();
 		this.fillContentWithImg(new String [] {
@@ -72,8 +86,9 @@ public class Plateau {
 	}
 	
 	public void fillContent() {
+		double color;
 		for (int i = 0; i < 17; i++) {
-			double color = (i * 0.042) % 1;
+			color = (i * 0.042) % 1;
 			this.content.setFillForPow(i, color+"");
 		}
 	}
@@ -95,9 +110,8 @@ public class Plateau {
 	}
 	
 	public String getScoreToString() {
-		final int MAX_SIZE = 7; 
 		String scoreToString = this.score + "";
-		int bounds = MAX_SIZE - scoreToString.length();
+		int bounds = this.MAX_SIZE_SCORE_TOSTRING - scoreToString.length();
 		
 		for (int i = 0; i < bounds; i++) {
 			scoreToString = "0" + scoreToString;
@@ -115,54 +129,36 @@ public class Plateau {
 	public void fillPlateauWithZero() {
 		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-				this.plateau[idxTabY][idxTabX] = new Case(new CaseContent(0));
+				this.plateau[idxTabY][idxTabX] = new Case();
 			}
 		}
 	}
 
 	public void generateRandomCase() {
-		List<int[]> emptyCase = getEmptyCase();
+		this.emptyCase = getEmptyCase();
 		
 		Random ran = new Random();
 		int[] idxCaseRandom = emptyCase.get(ran.nextInt(emptyCase.size()));
 		int perCent = ran.nextInt(100);
 		
 		if(perCent < 80) {
-			this.plateau[idxCaseRandom[0]][idxCaseRandom[1]] = new Case(new CaseContent(1));
+			this.plateau[idxCaseRandom[0]][idxCaseRandom[1]].getContent().setPow(1);;
 		}else {
-			this.plateau[idxCaseRandom[0]][idxCaseRandom[1]] = new Case(new CaseContent(2));
+			this.plateau[idxCaseRandom[0]][idxCaseRandom[1]].getContent().setPow(2);;
 		}
 	}
 	
 	public List<int[]> getEmptyCase() {
-		List<int[]> emptyCase = new ArrayList<>();
-		
+		this.emptyCase.clear();
 		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-				if(this.plateau[idxTabY][idxTabX].getContent().getPow() == 0) {
+				if(this.plateau[idxTabY][idxTabX].getContent().isNull()) {
 					emptyCase.add(new int[] {idxTabY, idxTabX});
 				}
 			}
 		}
 		
 		return emptyCase;
-	}
-
-	public String toString() {
-		String res = "";
-		
-		for (int idxTabX = 0; idxTabX < plateau.length; idxTabX++) {
-			res += "          | ";
-			for (int idxTabY = 0; idxTabY < plateau[idxTabX].length; idxTabY++) {
-				if(idxTabY != 0) {
-					res += " . ";
-				}
-				res += this.plateau[idxTabY][idxTabX].toString();
-			}
-			res += " |\n";
-		}
-		
-		return res;
 	}
 	
 	public boolean move(Movment mvt) {
@@ -173,13 +169,13 @@ public class Plateau {
 			moveFinish = true;
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-					int[] posTempo = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
-					if(posTempo[0] >= 0 && posTempo[0] < this.plateau.length && 
-					   posTempo[1] >= 0 && posTempo[1] < this.plateau[posTempo[0]].length) {
-						if(! this.plateau[idxTabX][idxTabY].equals(new Case(new CaseContent(0))) && 
-						   this.plateau[posTempo[0]][posTempo[1]].equals(new Case(new CaseContent(0)))) {
-							this.plateau[posTempo[0]][posTempo[1]] = this.plateau[idxTabX][idxTabY];
-							this.plateau[idxTabX][idxTabY] = new Case(new CaseContent(0));
+					int[] posTempoAfterMvt = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
+					if(posTempoAfterMvt[0] >= 0 && posTempoAfterMvt[0] < this.plateau.length && 
+					   posTempoAfterMvt[1] >= 0 && posTempoAfterMvt[1] < this.plateau[posTempoAfterMvt[0]].length) {
+						if(! this.plateau[idxTabX][idxTabY].getContent().isNull() && 
+						   this.plateau[posTempoAfterMvt[0]][posTempoAfterMvt[1]].getContent().isNull()) {
+							this.plateau[posTempoAfterMvt[0]][posTempoAfterMvt[1]] = this.plateau[idxTabX][idxTabY];
+							this.plateau[idxTabX][idxTabY] = new Case();
 							moveFinish = false;
 							count++;
 						}
@@ -206,14 +202,14 @@ public class Plateau {
 			
 			for (int idxTabX = this.plateau.length-1; idxTabX >= 0; idxTabX--) {
 				for (int idxTabY = this.plateau[idxTabX].length; idxTabY >= 0; idxTabY--) {
-					int[] posTempo = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
-					if(posTempo[0] >= 0 && posTempo[0] < this.plateau.length && 
-					   posTempo[1] >= 0 && posTempo[1] < this.plateau[posTempo[0]].length) {
-						if(! this.plateau[idxTabX][idxTabY].equals(new Case(new CaseContent(0))) &&
-						   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
-							this.plateau[posTempo[0]][posTempo[1]].getContent().incPow();
+					int[] posTempoAfterFusion = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
+					if(posTempoAfterFusion[0] >= 0 && posTempoAfterFusion[0] < this.plateau.length && 
+					   posTempoAfterFusion[1] >= 0 && posTempoAfterFusion[1] < this.plateau[posTempoAfterFusion[0]].length) {
+						if(! this.plateau[idxTabX][idxTabY].getContent().isNull() &&
+						   this.plateau[posTempoAfterFusion[0]][posTempoAfterFusion[1]].equals(this.plateau[idxTabX][idxTabY])) {
+							this.plateau[posTempoAfterFusion[0]][posTempoAfterFusion[1]].getContent().incPow();
 							this.plateau[idxTabX][idxTabY].getContent().setPow(0);
-							this.majScore(this.plateau[posTempo[0]][posTempo[1]].getContent().getPow());
+							this.majScore(this.plateau[posTempoAfterFusion[0]][posTempoAfterFusion[1]].getContent().getPow());
 							count++;
 						}
 					}
@@ -227,14 +223,14 @@ public class Plateau {
 			
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-					int[] posTempo = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
-					if(posTempo[0] >= 0 && posTempo[0] < this.plateau.length && 
-					   posTempo[1] >= 0 && posTempo[1] < this.plateau[posTempo[0]].length) {
-						if(! this.plateau[idxTabX][idxTabY].equals(new Case(new CaseContent(0))) &&
-						   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
-							this.plateau[posTempo[0]][posTempo[1]].getContent().incPow();
+					int[] posTempoAfterFusion = new int[] {idxTabX + mvt.getMovment()[0], idxTabY + mvt.getMovment()[1]};
+					if(posTempoAfterFusion[0] >= 0 && posTempoAfterFusion[0] < this.plateau.length && 
+					   posTempoAfterFusion[1] >= 0 && posTempoAfterFusion[1] < this.plateau[posTempoAfterFusion[0]].length) {
+						if(! this.plateau[idxTabX][idxTabY].getContent().isNull() &&
+						   this.plateau[posTempoAfterFusion[0]][posTempoAfterFusion[1]].equals(this.plateau[idxTabX][idxTabY])) {
+							this.plateau[posTempoAfterFusion[0]][posTempoAfterFusion[1]].getContent().incPow();
 							this.plateau[idxTabX][idxTabY].getContent().setPow(0);
-							this.majScore(this.plateau[posTempo[0]][posTempo[1]].getContent().getPow());
+							this.majScore(this.plateau[posTempoAfterFusion[0]][posTempoAfterFusion[1]].getContent().getPow());
 							count++;
 						}
 					}
@@ -261,15 +257,14 @@ public class Plateau {
 	}
 	
 	public boolean isBlocked() {
-		Movment[] mvts = Movment.values();
-		for (Movment movment : mvts) {
+		for (Movment movment : this.tabMovment) {
 			for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
 				for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
-					int[] posTempo = new int[] {idxTabX + movment.getMovment()[0], idxTabY + movment.getMovment()[1]};
-					if(posTempo[0] >= 0 && posTempo[0] < this.plateau.length && 
-					   posTempo[1] >= 0 && posTempo[1] < this.plateau[posTempo[0]].length) {
-						if(this.plateau[idxTabX][idxTabY].equals(new Case(new CaseContent(0))) ||
-						   this.plateau[posTempo[0]][posTempo[1]].equals(this.plateau[idxTabX][idxTabY])) {
+					int[] posTempoAfterMvt = new int[] {idxTabX + movment.getMovment()[0], idxTabY + movment.getMovment()[1]};
+					if(posTempoAfterMvt[0] >= 0 && posTempoAfterMvt[0] < this.plateau.length && 
+					   posTempoAfterMvt[1] >= 0 && posTempoAfterMvt[1] < this.plateau[posTempoAfterMvt[0]].length) {
+						if(this.plateau[idxTabX][idxTabY].getContent().isNull() ||
+						   this.plateau[posTempoAfterMvt[0]][posTempoAfterMvt[1]].equals(this.plateau[idxTabX][idxTabY])) {
 							return false;
 						}
 					}
@@ -292,8 +287,33 @@ public class Plateau {
 		}
 		return false;
 	}
+
+	public void resetPlateau() {
+		for (int idxTabX = 0; idxTabX < this.plateau.length; idxTabX++) {
+			for (int idxTabY = 0; idxTabY < this.plateau[idxTabX].length; idxTabY++) {
+				this.plateau[idxTabY][idxTabX].getContent().setPow(0);
+			}
+		}
+		this.generateRandomCase();
+		this.generateRandomCase();
+		this.score = 0;
+		this.win = false;
+	}
 	
-	/**
-	 * Créer une methode qui reset le jeu (plateau et score).
-	 */
+	public String toString() {
+		String res = "";
+		
+		for (int idxTabX = 0; idxTabX < plateau.length; idxTabX++) {
+			res += "          | ";
+			for (int idxTabY = 0; idxTabY < plateau[idxTabX].length; idxTabY++) {
+				if(idxTabY != 0) {
+					res += " . ";
+				}
+				res += this.plateau[idxTabY][idxTabX].toString();
+			}
+			res += " |\n";
+		}
+		
+		return res;
+	}
 }
