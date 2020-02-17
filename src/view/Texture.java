@@ -60,6 +60,6 @@ public class Texture {
 	}
 	
 	public MediaPlayer getMediaPlayerAtIdx(int idx) {
-		return new MediaPlayer(this.media[0]);
+		return new MediaPlayer(this.media[idx]);
 	}
 }
